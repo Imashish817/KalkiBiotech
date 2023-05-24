@@ -6,7 +6,7 @@
 package com.mycompany.kalki;
 
 import com.mycompany.kalki.DBCalls.GetDBData;
-import java.awt.Color;
+import com.mycompany.kalki.DBCalls.MongoDBCalls;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -24,12 +24,11 @@ import javax.swing.table.DefaultTableModel;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import java.util.Date;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Color;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
+import java.text.DecimalFormat;
+import java.util.Calendar;
+import javax.swing.JFrame;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
@@ -52,7 +51,8 @@ public class Billing extends javax.swing.JFrame {
             this.setSize(xsize, ysize);
             jDialog2.setSize(700, 500);
             try {
-                Meds.addAll(DB.GetAllMeds());
+//                Meds.addAll(DB.GetAllMeds());
+                Meds.addAll(dBCalls.getAllMeds());
                 System.out.println(Meds.size() + "------");
                 for (int i = 0; i < Meds.size(); i++) {
                     jComboBox1.addItem(Meds.get(i).getProduct() + " -> " + Meds.get(i).getBatch());
@@ -75,9 +75,34 @@ public class Billing extends javax.swing.JFrame {
     }
     ArrayList<Med> Meds = new ArrayList<>();
     GetDBData DB = new GetDBData();
-    ArrayList<Customer> customers = new ArrayList<>();
+    MongoDBCalls dBCalls = new MongoDBCalls();
+
+    public String getfinancialyear() {
+        Integer year = Calendar.getInstance().get(Calendar.YEAR);
+        String financialyear="";
+        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        if (month < 3) {
+            financialyear= (year - 1) + "-" + year.toString().substring(2);
+        } else {
+            financialyear= year + "-" + (++year).toString().substring(2);
+        }
+        return financialyear;
+    }
+    
+    public String getInvoiceNo(){
+        String invoiceno=dBCalls.getInvoiceCounter().toString();
+        while(invoiceno.length() !=4)
+        {
+        invoiceno="0"+invoiceno;
+        }
+        return invoiceno;
+    }
+
+
+ArrayList<Customer> customers = new ArrayList<>();
     LocalDate date = LocalDate.now();
-    String inv = Long.toString(new Date().getTime());
+    String inv = getfinancialyear()+"/KB/"+getInvoiceNo();
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -102,6 +127,10 @@ public class Billing extends javax.swing.JFrame {
         jLabel54 = new javax.swing.JLabel();
         jLabel55 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
+        jComboBox3 = new javax.swing.JComboBox<>();
+        jLabel59 = new javax.swing.JLabel();
+        jLabel63 = new javax.swing.JLabel();
+        jLabel64 = new javax.swing.JLabel();
         jProgressBar1 = new javax.swing.JProgressBar();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -194,10 +223,10 @@ public class Billing extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
 
+        jDialog2.setAlwaysOnTop(true);
         jDialog2.setBackground(new java.awt.Color(29, 31, 33));
-        jDialog2.setPreferredSize(new java.awt.Dimension(100, 600));
 
-        jPanel5.setBackground(new java.awt.Color(29, 31, 33));
+        jPanel5.setBackground(new java.awt.Color(5, 15, 25));
         jPanel5.setPreferredSize(new java.awt.Dimension(100, 430));
 
         jLabel61.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
@@ -239,11 +268,16 @@ public class Billing extends javax.swing.JFrame {
 
         jLabel53.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel53.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel53.setText("Payment Remark : ");
+        jLabel53.setText("Payment Type : ");
 
         jTextField9.setBackground(new java.awt.Color(29, 31, 33));
         jTextField9.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jTextField9.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField9ActionPerformed(evt);
+            }
+        });
 
         jLabel56.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel56.setForeground(new java.awt.Color(255, 255, 255));
@@ -277,42 +311,66 @@ public class Billing extends javax.swing.JFrame {
             }
         });
 
+        jComboBox3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "By Cash", "By Credit", "By Check", "By NEFT", "Other", " " }));
+
+        jLabel59.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel59.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel59.setText("Remark : ");
+
+        jLabel63.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel63.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel63.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        jLabel64.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3WyW.gif"))); // NOI18N
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(128, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel54, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel55, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGap(0, 118, Short.MAX_VALUE)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel51, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(26, 26, 26)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel54, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel55, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel52, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(36, 36, 36)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel53)
-                                .addGap(16, 16, 16)
-                                .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel56, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(130, 130, 130))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel61, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                                .addGap(1, 1, 1)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel5Layout.createSequentialGroup()
+                                        .addComponent(jLabel51, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(26, 26, 26)
+                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel5Layout.createSequentialGroup()
+                                        .addComponent(jLabel52, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(36, 36, 36)
+                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel5Layout.createSequentialGroup()
+                                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel53)
+                                            .addComponent(jLabel59, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel56, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(1, 1, 1)
+                                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addGap(130, 130, 130))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel63, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel61, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                    .addContainerGap(47, Short.MAX_VALUE)
+                    .addComponent(jLabel64, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(65, Short.MAX_VALUE)))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -336,8 +394,14 @@ public class Billing extends javax.swing.JFrame {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addComponent(jLabel53))
+                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel59, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
+                .addGap(11, 11, 11)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(5, 5, 5)
@@ -347,9 +411,16 @@ public class Billing extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel54)
                     .addComponent(jLabel55, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
+                .addGap(27, 27, 27)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel63, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41))
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel64, javax.swing.GroupLayout.PREFERRED_SIZE, 478, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout jDialog2Layout = new javax.swing.GroupLayout(jDialog2.getContentPane());
@@ -368,6 +439,7 @@ public class Billing extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Kalki Biotech || Billing");
         setBackground(new java.awt.Color(30, 41, 59));
+        setLocation(new java.awt.Point(0, 0));
         getContentPane().setLayout(null);
 
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -1027,7 +1099,6 @@ public class Billing extends javax.swing.JFrame {
         jTextField13.setBackground(new java.awt.Color(29, 31, 33));
         jTextField13.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jTextField13.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField13.setText("dsfdf");
         jTextField13.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField13ActionPerformed(evt);
@@ -1123,53 +1194,19 @@ public class Billing extends javax.swing.JFrame {
         jPanel4.setBounds(0, 0, 1390, 740);
 
         pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     public void fillCustomers() throws Exception {
         customers.clear();
-        customers.addAll(DB.GetAllCustomers());
+//        customers.addAll(DB.GetAllCustomers());
+        customers.addAll(dBCalls.getAllCustomers());
         System.out.println(customers.size() + "------");
         for (int i = 0; i < customers.size(); i++) {
             jComboBox2.addItem(customers.get(i).getFirm_Name() + " -> " + customers.get(i).getId());
         }
         AutoCompleteDecorator.decorate(jComboBox2, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
     }
-    private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField8ActionPerformed
     int selected_index;
 
-
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        String[] namebatch = jComboBox1.getSelectedItem().toString().split(" -> ");
-//        System.out.println(namebatch[0]+" "+namebatch[1]);
-
-        for (int i = 0; i < Meds.size(); i++) {
-            if (Meds.get(i).getProduct().equals(namebatch[0]) && Meds.get(i).getBatch().equals(namebatch[1])) {
-                selected_index = i;
-                break;
-            }
-        }
-        Med medicine = Meds.get(selected_index);
-        jLabel49.setText(String.valueOf(medicine.getQTY()));
-        jLabel9.setText(medicine.getHSNCode());
-        jLabel2.setText(medicine.getBatch());
-        jLabel3.setText(medicine.getExpire());
-        jLabel4.setText(medicine.getMRP().toString());
-        jLabel5.setText(String.valueOf(medicine.getGST()));
-        jTextField5.setText(String.valueOf(medicine.getPTR()));
-        jTextField6.setText(String.valueOf(medicine.getPTS()));
-        jLabel48.setText(String.valueOf(medicine.getRate()));
-        if (medicine.getScheme().length() > 1) {
-            String[] scheme = medicine.getScheme().split("\\+");
-            jTextField7.setText(scheme[0]);
-            jTextField8.setText(scheme[1]);
-        } else {
-            jTextField7.setText("0");
-            jTextField8.setText("0");
-        }
-
-    }//GEN-LAST:event_jComboBox1ActionPerformed
     int SN = 0;
     Double GrandTotal = 0.0;
     Double GrandGST = 0.0;
@@ -1179,82 +1216,6 @@ public class Billing extends javax.swing.JFrame {
     String Remark = "";
     Double AmountLeft = 0.0;
     ArrayList<BilledMeds> billedMeds = new ArrayList<>();
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        Med medicine = Meds.get(selected_index);
-        String ED = jTextField1.getText();
-        String qty = jTextField4.getText();
-        String ptr = jTextField5.getText();
-        String pts = jTextField6.getText();
-        String s1 = jTextField7.getText();
-        String s2 = jTextField8.getText();
-        String[] vals = {ED, qty, ptr, pts, s1, s2};
-        /*validations
-        * 
-         */
-        if (jTextField1.getText().equals("")) {
-            jTextField1.setText("0");
-        }
-        if (!Utility.isNumeric(vals) || qty.equals("0")) {
-            JOptionPane.showMessageDialog(rootPane, "Please Enter Values correctly.");
-        } else {
-            //text fileds values......
-            double ExtraDiscount = Double.parseDouble(ED);
-            int QTY = Integer.parseInt(qty);
-            Double PTR = Double.parseDouble(ptr);
-            Double PTS = Double.parseDouble(pts);
-            int amount = Integer.parseInt(s1);
-            int free = Integer.parseInt(jTextField8.getText());
-            double Schemediscount = 0;
-            int NetQTY = QTY;
-            if (amount > 0 && free > 0) {
-                double total = amount + free;
-                double SchemePercentage = free / total;
-                int Extra = (QTY / amount) * free;
-                NetQTY = QTY + Extra;
-                double restAmount = QTY % amount;
-                Schemediscount = (restAmount) * PTS * SchemePercentage;
-                System.out.println("dis ==> " + Extra + "--" + Schemediscount);
-            }
-            double Total = (QTY * PTS) - Schemediscount;
-            Double TaxableAmount = Total - (ExtraDiscount * Total) / 100;
-            GrandTaxable = GrandTaxable + TaxableAmount;
-            Double GST = (TaxableAmount * medicine.getGST()) / 100;
-            GrandGST = GrandGST + GST;
-            Double NetTotal = TaxableAmount + GST;
-            GrandTotal = GrandTotal + NetTotal;
-            Double Profit = TaxableAmount - (medicine.getRate() * NetQTY);
-            GrandProfit = GrandProfit + Profit;
-            BilledMeds billedMed = new BilledMeds(medicine.getId(), medicine.getHSNCode(), medicine.getBatch(), medicine.getProduct(), medicine.getPack(), medicine.getMRP(), QTY, jTextField7.getText() + " + " + jTextField8.getText(),
-                    NetQTY, medicine.getExpire(), PTS, PTR, ExtraDiscount, TaxableAmount, GST, NetTotal, Profit);
-            billedMeds.add(billedMed);
-            Object[] row = {
-                billedMeds.size(),
-                billedMed.getHSNCode(),//hsn
-                billedMed.getBatch(),
-                billedMed.getProduct(),
-                billedMed.getPack(),
-                billedMed.getMRP(),
-                billedMed.getQTY(),//QTY
-                billedMed.getScheme(),//scheme
-                billedMed.NetQTY,//net QTY
-                billedMed.getExpire(),
-                billedMed.getPTS(),//rate/pts
-                billedMed.getPTR(),//PTR
-                billedMed.getDiscount(),
-                billedMed.TaxableAmount,
-                billedMed.GST,
-                billedMed.NetTotal,
-                billedMed.Profit,};
-            model.addRow(row);
-            jLabel7.setText(GrandTotal.toString());
-            jLabel24.setText(GrandGST.toString());
-            jLabel26.setText(GrandTaxable.toString());
-            jLabel50.setText(GrandProfit.toString());
-        }
-
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         billedMeds.remove(jTable1.getSelectedRow());
@@ -1266,20 +1227,16 @@ public class Billing extends javax.swing.JFrame {
         for (int i = 0; i < billedMeds.size(); i++) {
             model.setValueAt(i + 1, i, 0);
             GrandTotal = GrandTotal + Double.parseDouble(model.getValueAt(i, 15).toString());
-            GrandGST = GrandGST + Double.parseDouble(model.getValueAt(i, 14).toString());
+            GrandGST = GrandGST + Double.parseDouble(model.getValueAt(i, 14).toString().split("<br>")[1].split("</html>")[0]);
             GrandTaxable = GrandTaxable + Double.parseDouble(model.getValueAt(i, 13).toString());
             GrandProfit = GrandProfit + Double.parseDouble(model.getValueAt(i, 16).toString());
         }
-        jLabel7.setText(GrandTotal.toString());
-        jLabel24.setText(GrandGST.toString());
-        jLabel26.setText(GrandTaxable.toString());
-        jLabel50.setText(GrandProfit.toString());
+        jLabel7.setText(df.format(GrandTotal));
+        jLabel24.setText(df.format(GrandGST));
+        jLabel26.setText(df.format(GrandTaxable));
+        jLabel50.setText(df.format(GrandProfit));
 
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
     public static int[] checkUpdateCounts(int[] updateCounts) {
         int success = 0;
         int failed = 0;
@@ -1297,6 +1254,7 @@ public class Billing extends javax.swing.JFrame {
         return count;
     }
     Customer shiptoAddress;
+    long shippingC_id;
     private void SubmitBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubmitBTNActionPerformed
         if (jTextField11.getText().trim().length() == 0
                 || jTextField12.getText().trim().length() == 0
@@ -1308,21 +1266,27 @@ public class Billing extends javax.swing.JFrame {
                 || jTextField18.getText().trim().length() == 0) {
             JOptionPane.showMessageDialog(rootPane, "Please Fill Shipping Address.");
         } else {
-            shiptoAddress = new Customer(0,
+            shiptoAddress = new Customer(0l,
                     jTextField11.getText(),
                     jTextField12.getText(),
                     jTextField13.getText(),
-                    "",
+                    jTextField13.getText(),
                     jTextField15.getText(),
                     jTextField14.getText(),
                     jTextField10.getText(),
                     jTextField16.getText(),
                     jTextField17.getText(),
                     jTextField18.getText());
-
+            if (!jCheckBox1.isSelected()) {
+                dBCalls.AddCustomer(shiptoAddress);
+                shippingC_id = dBCalls.Customer(shiptoAddress);
+            } else {
+                shippingC_id = customer_id;
+            }
             jDialog2.setVisible(true);
             jTextField2.setEditable(false);
             jTextField2.setText(GrandTotal.toString());
+            jLabel64.setVisible(false);
 
         }
 
@@ -1339,19 +1303,23 @@ public class Billing extends javax.swing.JFrame {
             jComboBox2.removeAllItems();
 
             fillCustomers();
-        } catch (Exception ex) {
-            Logger.getLogger(Billing.class.getName()).log(Level.SEVERE, null, ex);
+        
+
+} catch (Exception ex) {
+            Logger.getLogger(Billing.class
+.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton5ActionPerformed
-    int customer_id = 0;
+    long customer_id = 0;
     int customer_index = 0;
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
         customer_index = 0;
         if (jComboBox2.getSelectedItem() != null) {
             String[] nameID = jComboBox2.getSelectedItem().toString().split(" -> ");
             for (int i = 0; i < customers.size(); i++) {
-                if (customers.get(i).getFirm_Name().equals(nameID[0]) && customers.get(i).getId() == Integer.parseInt(nameID[1])) {
+                if (customers.get(i).getFirm_Name().equals(nameID[0]) && customers.get(i).getId() == Long.parseLong(nameID[1])) {
                     customer_index = i;
+                    System.out.println(customers.get(i).getId());
                     customer_id = customers.get(i).getId();
                     break;
                 }
@@ -1372,62 +1340,100 @@ public class Billing extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
+    private void setall(boolean b) {
 
+        jLabel51.setVisible(b);
+        jLabel52.setVisible(b);
+        jLabel53.setVisible(b);
+        jLabel54.setVisible(b);
+        jLabel55.setVisible(b);
+        jLabel56.setVisible(b);
+        jLabel59.setVisible(b);
+
+        jTextField2.setVisible(b);
+        jTextField3.setVisible(b);
+        jTextField9.setVisible(b);
+        jTextField19.setVisible(b);
+
+        jComboBox3.setVisible(b);
+        jButton3.setVisible(b);
+
+    }
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        if (jTextField2.getText().trim().length() == 0
-                || jTextField3.getText().trim().length() == 0
-                || jTextField9.getText().trim().length() == 0
-                || jTextField19.getText().trim().length() == 0) {
-            JOptionPane.showMessageDialog(rootPane, "Please Enter All Values");
-        } else {
-            AmountPaid = Double.valueOf(jTextField3.getText());
-            Remark = jTextField9.getText();
-            int response = JOptionPane.showConfirmDialog(rootPane, "Do You Want to Continue...\n After this you can not reverse it");
-            System.out.println("com.mycompany.kalki.Billing.jButton3ActionPerformed()  " + response);
-            if (response == 0) {
-
-                boolean b = DB.AddBill(inv, jLabel38.getText(), customer_id, GrandTaxable, GrandGST, GrandTotal, GrandProfit, java.sql.Date.valueOf(LocalDate.now()), AmountPaid, Remark);
-                try {
-                    if (billedMeds.size() == 0) {
-                    } else {
-                        int[] updateCounts = DB.insertBilledMeds(billedMeds, inv, java.sql.Date.valueOf(LocalDate.now()));
-                        int[] arr = checkUpdateCounts(updateCounts);
-//                        JOptionPane.showMessageDialog(rootPane, "Operation Completed \n succes: " + arr[0] + "  failure " + arr[1]);
-                        //remove inventry from items table
-                        for (int i = 0; i < billedMeds.size(); i++) {
-                            System.out.println(billedMeds.get(i).getProduct() + "--" + billedMeds.get(i).getBatch());
-                            DB.updateitemlist(billedMeds.get(i).getNetQTY(), billedMeds.get(i).getId());
-                        }
-                    }
-                } catch (Exception ex) {
-                    Logger.getLogger(Billing.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                System.out.println("com.mycompany.kalki.Billing.jButton3ActionPerformed()" + jTextField2.getText() + jTextField3.getText() + jTextField9.getText());
-                jDialog2.pack();
-                jDialog2.setLocationRelativeTo(null);
-                jDialog2.setVisible(false);
-                jDialog2.setSize(190, 230);
-                PrintingJob job = new PrintingJob();
-                job.basicDetails(inv, date);
-                job.setBilledDetails(customers.get(customer_index));
-                job.setShippingDetails(shiptoAddress);
-                job.Meds(billedMeds, GrandGST, GrandTaxable, GrandTotal, jTextField3.getText(), jTextField9.getText(), jLabel55.getText(), jTextField19.getText());
-                //todo: print
-                //print mech..........
+        Thread t = new Thread(new Runnable() {
+            @Override
+        public void run() {
+                setall(false);
+                jLabel64.setVisible(true);
             }
-        }
 
+        });
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+        public void run() {
+                if (jTextField2.getText().trim().length() == 0
+                        || jTextField3.getText().trim().length() == 0
+                        || jTextField9.getText().trim().length() == 0
+                        || jTextField19.getText().trim().length() == 0) {
+                    JOptionPane.showMessageDialog(rootPane, "Please Enter All Values");
+                } else {
+                    if (!jCheckBox1.isSelected()) {
+                        shippingC_id = dBCalls.Customer(shiptoAddress);
+                    }
+                    AmountPaid = Double.valueOf(jTextField3.getText());
+                    Remark = jComboBox3.getSelectedItem() + " - " + jTextField9.getText();
+                   jLabel63.setText("Adding Bill To DataBase......");
+//                boolean b = DB.AddBill(inv, jLabel38.getText(), customer_id, GrandTaxable, GrandGST, GrandTotal, GrandProfit, java.sql.Date.valueOf(LocalDate.now()), AmountPaid, Remark);
+                        boolean b = dBCalls.AddBill(inv, jLabel38.getText(), customer_id, shippingC_id, GrandTaxable, GrandGST, GrandTotal, GrandProfit, java.sql.Date.valueOf(LocalDate.now()), AmountPaid, Remark, jTextField19.getText());
+                        //update invoice counter;
+                        dBCalls.updateInvoiceCounter(Integer.parseInt(inv.split("/KB/")[1]));
+                        try {
+                            if (billedMeds.isEmpty()) {
+                            } else {
+                                int[] updateCounts = dBCalls.insertBilledMeds(billedMeds, inv, java.sql.Date.valueOf(LocalDate.now()));
+                                 jLabel63.setText("updating Medicines To DataBase......");
+                                int[] arr = checkUpdateCounts(updateCounts);
+//                        JOptionPane.showMessageDialog(rootPane, "Operation Completed \n succes: " + arr[0] + "  failure " + arr[1]);
+                                //remove inventry from items table
+                                for (int i = 0; i < billedMeds.size(); i++) {
+                                    System.out.println(billedMeds.get(i).getProduct() + "--" + billedMeds.get(i).getId());
+                                    dBCalls.updateitemlist(billedMeds.get(i).getNetQTY(), billedMeds.get(i).getId());
+                                }
+                            }
+                            jLabel63.setText("finalizing Bill......");
+                        
+
+} catch (Exception ex) {
+                            Logger.getLogger(Billing.class
+.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        jDialog2.pack();
+                        jDialog2.setLocationRelativeTo(null);
+                        jDialog2.setVisible(false);
+                        jDialog2.setSize(190, 230);
+                        PrintingJob job = new PrintingJob();
+                        job.basicDetails(inv, date);
+                        job.setBilledDetails(customers.get(customer_index));
+                        job.setShippingDetails(shiptoAddress);
+                        job.Meds(billedMeds, GrandGST, GrandTaxable, GrandTotal, jTextField3.getText(), Remark, jLabel55.getText(), jTextField19.getText());
+                        //todo: print
+                        //print mech..........
+                    }
+                
+                setall(true);
+                jLabel64.setVisible(false);
+                dispose();
+
+                new JFrame().setVisible(false);
+            }
+
+        });
+
+        t.start();
+        t1.start();
 
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -1480,17 +1486,6 @@ public class Billing extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField16ActionPerformed
 
-    private void jButton1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseEntered
-        jButton1.setBackground(new java.awt.Color(20, 130, 59));
-//       jButton1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 4, true));
-//       [255,152,63]
-    }//GEN-LAST:event_jButton1MouseEntered
-
-    private void jButton1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseExited
-        jButton1.setBackground(new java.awt.Color(255, 152, 63));
-//          jButton1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 0, true));
-    }//GEN-LAST:event_jButton1MouseExited
-
     private void jButton4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseEntered
         jButton4.setBackground(new java.awt.Color(20, 130, 59));
         jButton4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -1533,6 +1528,162 @@ public class Billing extends javax.swing.JFrame {
         jButton3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
     }//GEN-LAST:event_jButton3MouseExited
 
+    private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField9ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        Med medicine = Meds.get(selected_index);
+        String ED = jTextField1.getText();
+        String qty = jTextField4.getText();
+        String ptr = jTextField5.getText();
+        String pts = jTextField6.getText();
+        String s1 = jTextField7.getText();
+        String s2 = jTextField8.getText();
+        String[] vals = {ED, qty, ptr, pts, s1, s2};
+        /*validations
+        *
+         */
+        if (jTextField1.getText().equals("")) {
+            jTextField1.setText("0");
+        }
+        if (!Utility.isNumeric(vals) || qty.equals("0")) {
+            JOptionPane.showMessageDialog(rootPane, "Please Enter Values correctly.");
+        } else {
+            //text fileds values......
+            double ExtraDiscount = Double.parseDouble(ED);
+            int QTY = Integer.parseInt(qty);
+            Double PTR = Double.parseDouble(ptr);
+            Double PTS = Double.parseDouble(pts);
+            int amount = Integer.parseInt(s1);
+            int free = Integer.parseInt(jTextField8.getText());
+            double Schemediscount = 0;
+            int NetQTY = QTY;
+            if (amount > 0 && free > 0) {
+                double total = amount + free;
+                double SchemePercentage = free / total;
+                int Extra = (QTY / amount) * free;
+                NetQTY = QTY + Extra;
+                double restAmount = QTY % amount;
+                Schemediscount = (restAmount) * PTS * SchemePercentage;
+                System.out.println("dis ==> " + Extra + "--" + Schemediscount);
+            }
+            double Total = (QTY * PTS) - Schemediscount;
+            Double TaxableAmount = Total - (ExtraDiscount * Total) / 100;
+            GrandTaxable = GrandTaxable + TaxableAmount;
+            Double GST = (TaxableAmount * medicine.getGST()) / 100;
+            GrandGST = GrandGST + GST;
+            Double NetTotal = TaxableAmount + GST;
+            GrandTotal = GrandTotal + NetTotal;
+            Double Profit = TaxableAmount - (medicine.getRate() * NetQTY);
+            GrandProfit = GrandProfit + Profit;
+            BilledMeds billedMed = new BilledMeds(medicine.getID(), 
+                    medicine.getHSNCode(), 
+                    medicine.getBatch(), 
+                    medicine.getProduct(), 
+                    medicine.getPack(), 
+                    medicine.getMRP(), 
+                    QTY, 
+                    jTextField7.getText() + " + " + jTextField8.getText(),
+                    NetQTY, 
+                    medicine.getExpire(),
+                    Double.valueOf(df.format(PTS)) ,
+                    Double.valueOf(df.format(PTR)) ,
+                    Double.valueOf(df.format(ExtraDiscount)) ,
+                    Double.valueOf(df.format(TaxableAmount)) ,
+                    Double.valueOf(df.format(medicine.getGST())) , 
+                    Double.valueOf(df.format(GST)), 
+                    Double.valueOf(df.format(NetTotal)) ,
+                    Double.valueOf(df.format(Profit)) 
+                    );
+            billedMeds.add(billedMed);
+            Object[] row = {
+                billedMeds.size(),
+                billedMed.getHSNCode(),//hsn
+                billedMed.getBatch(),
+                billedMed.getProduct(),
+                billedMed.getPack(),
+                billedMed.getMRP(),
+                billedMed.getQTY(),//QTY
+                billedMed.getScheme(),//scheme
+                billedMed.NetQTY,//net QTY
+                billedMed.getExpire(),
+                billedMed.getPTS(),//rate/pts
+                billedMed.getPTR(),//PTR
+                billedMed.getDiscount(),
+                billedMed.TaxableAmount,
+                "<html>"+billedMed.GSTPercentage.toString()+"<br>"+billedMed.GST.toString()+"</html>",
+//                billedMed.GSTPercentage.toString()+ "\n"+billedMed.GST.toString(),
+                billedMed.NetTotal,
+                billedMed.Profit
+            };
+            model.addRow(row);
+            jTable1.setRowHeight(billedMeds.size()-1, 30);
+            jLabel7.setText(df.format(GrandTotal));
+            jLabel24.setText(df.format(GrandGST));
+            jLabel26.setText(df.format(GrandTaxable));
+            jLabel50.setText(df.format(GrandProfit));
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseExited
+        jButton1.setBackground(new java.awt.Color(255, 152, 63));
+        //          jButton1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 0, true));
+    }//GEN-LAST:event_jButton1MouseExited
+
+    private void jButton1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseEntered
+        jButton1.setBackground(new java.awt.Color(20, 130, 59));
+        //       jButton1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 4, true));
+        //       [255,152,63]
+    }//GEN-LAST:event_jButton1MouseEntered
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField6ActionPerformed
+
+    private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField8ActionPerformed
+
+    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField4ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        String[] namebatch = jComboBox1.getSelectedItem().toString().split(" -> ");
+        //        System.out.println(namebatch[0]+" "+namebatch[1]);
+
+        for (int i = 0; i < Meds.size(); i++) {
+            if (Meds.get(i).getProduct().equals(namebatch[0]) && Meds.get(i).getBatch().equals(namebatch[1])) {
+                selected_index = i;
+                break;
+            }
+        }
+        Med medicine = Meds.get(selected_index);
+        jLabel49.setText(String.valueOf(medicine.getQTY()));
+        jLabel9.setText(medicine.getHSNCode());
+        jLabel2.setText(medicine.getBatch());
+        jLabel3.setText(medicine.getExpire());
+        jLabel4.setText(medicine.getMRP().toString());
+        jLabel5.setText(String.valueOf(medicine.getGST()));
+        jTextField5.setText(String.valueOf(medicine.getPTR()));
+        jTextField6.setText(String.valueOf(medicine.getPTS()));
+        jLabel48.setText(String.valueOf(medicine.getRate()));
+        if (medicine.getScheme().length() > 1) {
+            String[] scheme = medicine.getScheme().split("\\+");
+            jTextField7.setText(scheme[0]);
+            jTextField8.setText(scheme[1]);
+        } else {
+            jTextField7.setText("0");
+            jTextField8.setText("0");
+        }
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1547,16 +1698,28 @@ public class Billing extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-                }
+                
+
+}
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Billing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Billing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Billing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Billing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Billing.class
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        
+
+} catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Billing.class
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        
+
+} catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Billing.class
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        
+
+} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Billing.class
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 //        UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
@@ -1578,6 +1741,7 @@ public class Billing extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JDialog jDialog2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1633,10 +1797,13 @@ public class Billing extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel56;
     private javax.swing.JLabel jLabel57;
     private javax.swing.JLabel jLabel58;
+    private javax.swing.JLabel jLabel59;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel60;
     private javax.swing.JLabel jLabel61;
     private javax.swing.JLabel jLabel62;
+    private javax.swing.JLabel jLabel63;
+    private javax.swing.JLabel jLabel64;
     private javax.swing.JLabel jLabel65;
     private javax.swing.JLabel jLabel67;
     private javax.swing.JLabel jLabel68;
@@ -1677,48 +1844,48 @@ public class Billing extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 class RoundedPanel extends JPanel {
 
-        private Color backgroundColor;
-        private int cornerRadius = 15;
+    private Color backgroundColor;
+    private int cornerRadius = 15;
 
-        public RoundedPanel(LayoutManager layout, int radius) {
-            super(layout);
-            cornerRadius = radius;
-        }
-
-        public RoundedPanel(LayoutManager layout, int radius, Color bgColor) {
-            super(layout);
-            cornerRadius = radius;
-            backgroundColor = bgColor;
-        }
-
-        public RoundedPanel(int radius) {
-            super();
-            cornerRadius = radius;
-        }
-
-        public RoundedPanel(int radius, Color bgColor) {
-            super();
-            cornerRadius = radius;
-            backgroundColor = bgColor;
-        }
-
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Dimension arcs = new Dimension(cornerRadius, cornerRadius);
-            int width = getWidth();
-            int height = getHeight();
-            Graphics2D graphics = (Graphics2D) g;
-            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            //Draws the rounded panel with borders.
-            if (backgroundColor != null) {
-                graphics.setColor(backgroundColor);
-            } else {
-                graphics.setColor(getBackground());
-            }
-            graphics.fillRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height); //paint background
-            graphics.setColor(getForeground());
-            graphics.drawRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height); //paint border
-        }
+    public RoundedPanel(LayoutManager layout, int radius) {
+        super(layout);
+        cornerRadius = radius;
     }
+
+    public RoundedPanel(LayoutManager layout, int radius, Color bgColor) {
+        super(layout);
+        cornerRadius = radius;
+        backgroundColor = bgColor;
+    }
+
+    public RoundedPanel(int radius) {
+        super();
+        cornerRadius = radius;
+    }
+
+    public RoundedPanel(int radius, Color bgColor) {
+        super();
+        cornerRadius = radius;
+        backgroundColor = bgColor;
+    }
+
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Dimension arcs = new Dimension(cornerRadius, cornerRadius);
+        int width = getWidth();
+        int height = getHeight();
+        Graphics2D graphics = (Graphics2D) g;
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        //Draws the rounded panel with borders.
+        if (backgroundColor != null) {
+            graphics.setColor(backgroundColor);
+        } else {
+            graphics.setColor(getBackground());
+        }
+        graphics.fillRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height); //paint background
+        graphics.setColor(getForeground());
+        graphics.drawRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height); //paint border
+    }
+}
 }

@@ -10,7 +10,7 @@ package com.mycompany.kalki;
  * @author imash
  */
 public class Med {
-    int id;
+   Long ID;
     String HSNCode;
     String Product;
     String Pack;
@@ -22,6 +22,7 @@ public class Med {
     Double PTS;
     Double PTR;
     Double Rate;
+    Double GSTpercentage;
     Double MRP;
 
     public Med() {
@@ -35,18 +36,12 @@ public class Med {
         this.PTR = PTR;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+  
 
     
 
-    public Med(int id,String HSNCode, String Product, String Pack, String Batch, String Expire, int GST, int QTY, String Scheme, Double PTS, Double PTR, Double Rate, Double MRP) {
-        this.id=id;
+    public Med(Long ID,String HSNCode, String Product, String Pack, String Batch, String Expire, int GST, int QTY, String Scheme, Double PTS, Double PTR, Double Rate, Double GSTpercentage, Double MRP) {
+       this.ID=ID;
         this.HSNCode = HSNCode;
         this.Product = Product;
         this.Pack = Pack;
@@ -58,11 +53,28 @@ public class Med {
         this.PTS = PTS;
         this.PTR = PTR;
         this.Rate = Rate;
+        this.GSTpercentage= GSTpercentage;
         this.MRP = MRP;
+    }
+
+    public Double getGSTpercentage() {
+        return GSTpercentage;
+    }
+
+    public void setGSTpercentage(Double GSTpercentage) {
+        this.GSTpercentage = GSTpercentage;
     }
 
     public String getHSNCode() {
         return HSNCode;
+    }
+
+    public Long getID() {
+        return ID;
+    }
+
+    public void setID(Long ID) {
+        this.ID = ID;
     }
 
     public String getProduct() {

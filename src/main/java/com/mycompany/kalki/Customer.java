@@ -10,7 +10,7 @@ package com.mycompany.kalki;
  * @author imash
  */
 public class Customer {
-    int id;
+    Long id;
     String Firm_Name;
     String Address;
     String Mobile;
@@ -22,7 +22,7 @@ public class Customer {
     String DL2;
     String State;
 
-    public Customer(int id, String Firm_Name, String Address, String Mobile, String tel, String email, String GSTno, String PAN, String DL1, String DL2, String State) {
+    public Customer(Long id, String Firm_Name, String Address, String Mobile, String tel, String email, String GSTno, String PAN, String DL1, String DL2, String State) {
         this.id = id;
         this.Firm_Name = Firm_Name;
         this.Address = Address;
@@ -36,11 +36,11 @@ public class Customer {
         this.State = State;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

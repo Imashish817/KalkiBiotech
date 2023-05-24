@@ -10,7 +10,7 @@ package com.mycompany.kalki;
  * @author imash
  */
 public class BilledMeds {
-    int id;
+    Long id;
      String HSNCode;
      String Batch;
     String Product;
@@ -24,21 +24,22 @@ public class BilledMeds {
     Double PTR;
     Double Discount;
     Double TaxableAmount;
+    Double GSTPercentage;
     Double GST;
     Double NetTotal;
     Double Profit;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     
 
-    public BilledMeds(int id,String HSNCode, String Batch, String Product, String Pack, Double MRP, int QTY, String Scheme, int NetQTY, String Expire, Double PTS, Double PTR, Double Discount, Double TaxableAmount, Double GST, Double NetTotal,Double Profit) {
+    public BilledMeds(Long id,String HSNCode, String Batch, String Product, String Pack, Double MRP, int QTY, String Scheme, int NetQTY, String Expire, Double PTS, Double PTR, Double Discount, Double TaxableAmount,Double GSTPercentage, Double GST, Double NetTotal,Double Profit) {
         this.id=id;
         this.HSNCode = HSNCode;
         this.Batch = Batch;
@@ -53,6 +54,7 @@ public class BilledMeds {
         this.PTR = PTR;
         this.Discount = Discount;
         this.TaxableAmount = TaxableAmount;
+        this.GSTPercentage=GSTPercentage;
         this.GST = GST;
         this.NetTotal = NetTotal;
         this.Profit=Profit;
@@ -68,6 +70,14 @@ public class BilledMeds {
 
     public Double getDiscount() {
         return Discount;
+    }
+
+    public Double getGSTPercentage() {
+        return GSTPercentage;
+    }
+
+    public void setGSTPercentage(Double GSTPercentage) {
+        this.GSTPercentage = GSTPercentage;
     }
 
     public void setDiscount(Double Discount) {

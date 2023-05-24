@@ -6,6 +6,7 @@
 package com.mycompany.kalki;
 
 import com.mycompany.kalki.DBCalls.GetDBData;
+import com.mycompany.kalki.DBCalls.MongoDBCalls;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -59,7 +60,7 @@ public class SalesRecord extends javax.swing.JFrame {
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator5 = new javax.swing.JSeparator();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel1.setText("Starting Date :");
@@ -222,20 +223,23 @@ public class SalesRecord extends javax.swing.JFrame {
         String date1=jTextField1.getText();
         String month1=jComboBox1.getSelectedItem().toString();
         String Year=jComboBox2.getSelectedItem().toString();
-        Date start =Date.valueOf(Year+"-"+month1+"-"+date1);
+        java.sql.Date start =Date.valueOf(Year+"-"+month1+"-"+date1);
+        
         System.out.println(start);
         
          String date2=jTextField2.getText();
         String month2=jComboBox3.getSelectedItem().toString();
         String Year2=jComboBox4.getSelectedItem().toString();
         Date End =Date.valueOf(Year2+"-"+month2+"-"+date2);
+        End =new Date(End.getTime() + 1000 * 60 * 60 * 24 * 1);
         System.out.println(End.compareTo(start));
         ArrayList <Double> SalesDetail =new ArrayList<Double>();
-        if(End.compareTo(start)>=0)
+        if(End.compareTo(start)>0)
         {
             try {
-                GetDBData DB =new GetDBData();
-                SalesDetail=DB.GetSalesDetails(start, End);
+//                GetDBData DB =new GetDBData();
+                MongoDBCalls dbCalls =new MongoDBCalls();
+                SalesDetail=dbCalls.GetSalesDetails(start, End);
                 jLabel8.setText(SalesDetail.get(0).toString());
                 jLabel9.setText(SalesDetail.get(1).toString());
                 jLabel10.setText(SalesDetail.get(2).toString());

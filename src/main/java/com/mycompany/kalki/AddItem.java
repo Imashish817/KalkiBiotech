@@ -6,9 +6,12 @@
 package com.mycompany.kalki;
 
 import com.mycompany.kalki.DBCalls.GetDBData;
+import com.mycompany.kalki.DBCalls.MongoDBCalls;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
@@ -24,9 +27,11 @@ public class AddItem extends javax.swing.JFrame {
     public AddItem() {
         initComponents();
         AutoCompleteDecorator.decorate(year);
-        GetDBData bdata = new GetDBData();
+//        GetDBData bdata = new GetDBData();
+        MongoDBCalls dbCalls = new MongoDBCalls();
+jLabel14.setVisible(false);
         try {
-            MedsName = bdata.GetAllMedsName();
+            MedsName = dbCalls.GetAllMedsName();
             AutoCompleteDecorator.decorate(product, MedsName, false);
         } catch (Exception ex) {
             Logger.getLogger(AddItem.class.getName()).log(Level.SEVERE, null, ex);
@@ -45,241 +50,405 @@ public class AddItem extends javax.swing.JFrame {
     private void initComponents() {
 
         jSeparator1 = new javax.swing.JSeparator();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        HSN = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        product = new javax.swing.JTextField();
+        gst = new javax.swing.JComboBox<>();
         pack = new javax.swing.JTextField();
+        HSN = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
         batch = new javax.swing.JTextField();
+        month = new javax.swing.JComboBox<>();
+        year = new javax.swing.JComboBox<>();
         qty = new javax.swing.JTextField();
         Sc1 = new javax.swing.JTextField();
-        gst = new javax.swing.JComboBox<>();
-        pts = new javax.swing.JTextField();
-        month = new javax.swing.JComboBox<>();
-        jLabel16 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
         sc2 = new javax.swing.JTextField();
-        product = new javax.swing.JTextField();
-        year = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        jLabel16 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
         ptr = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        pts = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
         rate = new javax.swing.JTextField();
         mrp = new javax.swing.JTextField();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+
+        jLabel15.setText("jLabel15");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+        });
         getContentPane().setLayout(null);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel1.setText("HSN *");
-        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(90, 120, 70, 30);
+        jPanel3.setBackground(new java.awt.Color(5, 15, 25));
+        jPanel3.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel3.setLayout(null);
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel2.setText("Product *");
-        jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(90, 77, 110, 30);
+        jLabel9.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Rate *");
+        jPanel3.add(jLabel9);
+        jLabel9.setBounds(500, 240, 50, 30);
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel3.setText("Pack");
-        jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel3);
-        jLabel3.setBounds(91, 161, 70, 30);
-
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel4.setText("Batch *");
-        jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel4);
-        jLabel4.setBounds(91, 210, 76, 31);
-
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel5.setText("Expiry *");
-        jLabel5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel5);
-        jLabel5.setBounds(91, 252, 80, 30);
-
-        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel6.setText("QTY *");
-        jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel6);
-        jLabel6.setBounds(90, 340, 67, 30);
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel7.setText("Scheme");
-        jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel7);
-        jLabel7.setBounds(90, 380, 60, 30);
-
-        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel10.setText("GST % *");
-        getContentPane().add(jLabel10);
-        jLabel10.setBounds(91, 288, 70, 40);
-
-        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel11.setText("PTS *");
-        getContentPane().add(jLabel11);
-        jLabel11.setBounds(90, 460, 70, 30);
-
-        HSN.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        HSN.setMaximumSize(new java.awt.Dimension(6, 23));
-        HSN.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                HSNActionPerformed(evt);
-            }
-        });
-        getContentPane().add(HSN);
-        HSN.setBounds(170, 120, 190, 30);
-
-        pack.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        pack.setMaximumSize(new java.awt.Dimension(6, 23));
-        getContentPane().add(pack);
-        pack.setBounds(170, 160, 190, 30);
-
-        batch.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        batch.setMaximumSize(new java.awt.Dimension(6, 23));
-        batch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                batchActionPerformed(evt);
-            }
-        });
-        getContentPane().add(batch);
-        batch.setBounds(170, 210, 190, 30);
-
-        qty.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        qty.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                qtyActionPerformed(evt);
-            }
-        });
-        getContentPane().add(qty);
-        qty.setBounds(170, 340, 190, 30);
-
-        Sc1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        getContentPane().add(Sc1);
-        Sc1.setBounds(180, 380, 60, 30);
-
-        gst.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        gst.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "12", "18" }));
-        getContentPane().add(gst);
-        gst.setBounds(170, 290, 190, 40);
-
-        pts.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        getContentPane().add(pts);
-        pts.setBounds(170, 460, 190, 30);
-
-        month.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        month.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }));
-        month.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                monthActionPerformed(evt);
-            }
-        });
-        getContentPane().add(month);
-        month.setBounds(170, 250, 89, 30);
-
-        jLabel16.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel16.setText("+");
-        getContentPane().add(jLabel16);
-        jLabel16.setBounds(250, 380, 40, 30);
-
-        sc2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        getContentPane().add(sc2);
-        sc2.setBounds(280, 380, 70, 30);
-
-        product.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        product.setBackground(new java.awt.Color(5, 15, 25));
+        product.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        product.setForeground(new java.awt.Color(255, 255, 255));
         product.setMaximumSize(new java.awt.Dimension(6, 23));
         product.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 productActionPerformed(evt);
             }
         });
-        getContentPane().add(product);
+        product.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                productKeyPressed(evt);
+            }
+        });
+        jPanel3.add(product);
         product.setBounds(170, 80, 190, 30);
 
-        year.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034", " " }));
-        getContentPane().add(year);
-        year.setBounds(270, 250, 90, 30);
+        gst.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        gst.setForeground(new java.awt.Color(255, 255, 255));
+        gst.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "12", "18" }));
+        gst.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                gstKeyPressed(evt);
+            }
+        });
+        jPanel3.add(gst);
+        gst.setBounds(170, 280, 190, 30);
 
+        pack.setBackground(new java.awt.Color(5, 15, 25));
+        pack.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        pack.setForeground(new java.awt.Color(255, 255, 255));
+        pack.setMaximumSize(new java.awt.Dimension(6, 23));
+        pack.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                packKeyPressed(evt);
+            }
+        });
+        jPanel3.add(pack);
+        pack.setBounds(170, 160, 190, 30);
+
+        HSN.setBackground(new java.awt.Color(5, 15, 25));
+        HSN.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        HSN.setForeground(new java.awt.Color(255, 255, 255));
+        HSN.setMaximumSize(new java.awt.Dimension(6, 23));
+        HSN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                HSNActionPerformed(evt);
+            }
+        });
+        HSN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                HSNKeyPressed(evt);
+            }
+        });
+        jPanel3.add(HSN);
+        HSN.setBounds(170, 120, 190, 30);
+
+        jLabel10.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("GST % *");
+        jPanel3.add(jLabel10);
+        jLabel10.setBounds(90, 280, 70, 30);
+
+        jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Pack *");
+        jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel3.add(jLabel3);
+        jLabel3.setBounds(91, 161, 70, 30);
+
+        jLabel2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Product *");
+        jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel3.add(jLabel2);
+        jLabel2.setBounds(90, 77, 80, 30);
+
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("HSN *");
+        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel3.add(jLabel1);
+        jLabel1.setBounds(90, 120, 70, 30);
+
+        jLabel13.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel13.setText("Add Item");
+        jPanel3.add(jLabel13);
+        jLabel13.setBounds(0, 11, 960, 44);
+
+        jLabel18.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel18.setText("GST Paid*");
+        jPanel3.add(jLabel18);
+        jLabel18.setBounds(500, 280, 70, 30);
+
+        batch.setBackground(new java.awt.Color(5, 15, 25));
+        batch.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        batch.setForeground(new java.awt.Color(255, 255, 255));
+        batch.setMaximumSize(new java.awt.Dimension(6, 23));
+        batch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                batchActionPerformed(evt);
+            }
+        });
+        batch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                batchKeyPressed(evt);
+            }
+        });
+        jPanel3.add(batch);
+        batch.setBounds(170, 200, 190, 30);
+
+        month.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        month.setForeground(new java.awt.Color(255, 255, 255));
+        month.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }));
+        month.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                monthActionPerformed(evt);
+            }
+        });
+        month.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                monthKeyPressed(evt);
+            }
+        });
+        jPanel3.add(month);
+        month.setBounds(170, 240, 89, 30);
+
+        year.setBackground(new java.awt.Color(5, 15, 25));
+        year.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        year.setForeground(new java.awt.Color(255, 255, 255));
+        year.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034", " " }));
+        year.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                yearKeyPressed(evt);
+            }
+        });
+        jPanel3.add(year);
+        year.setBounds(270, 240, 90, 30);
+
+        qty.setBackground(new java.awt.Color(5, 15, 25));
+        qty.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        qty.setForeground(new java.awt.Color(255, 255, 255));
+        qty.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                qtyActionPerformed(evt);
+            }
+        });
+        qty.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                qtyKeyPressed(evt);
+            }
+        });
+        jPanel3.add(qty);
+        qty.setBounds(580, 80, 190, 30);
+
+        Sc1.setBackground(new java.awt.Color(5, 15, 25));
+        Sc1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        Sc1.setForeground(new java.awt.Color(255, 255, 255));
+        Sc1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Sc1ActionPerformed(evt);
+            }
+        });
+        Sc1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                Sc1KeyPressed(evt);
+            }
+        });
+        jPanel3.add(Sc1);
+        Sc1.setBounds(580, 120, 70, 30);
+
+        jTextField2.setBackground(new java.awt.Color(5, 15, 25));
+        jTextField2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jTextField2.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField2KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField2KeyReleased(evt);
+            }
+        });
+        jPanel3.add(jTextField2);
+        jTextField2.setBounds(700, 280, 70, 30);
+
+        sc2.setBackground(new java.awt.Color(5, 15, 25));
+        sc2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        sc2.setForeground(new java.awt.Color(255, 255, 255));
+        sc2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                sc2KeyPressed(evt);
+            }
+        });
+        jPanel3.add(sc2);
+        sc2.setBounds(690, 120, 80, 30);
+
+        jLabel16.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setText("+");
+        jPanel3.add(jLabel16);
+        jLabel16.setBounds(650, 120, 40, 30);
+
+        jTextField1.setBackground(new java.awt.Color(5, 15, 25));
+        jTextField1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextField1KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
+            }
+        });
+        jPanel3.add(jTextField1);
+        jTextField1.setBounds(580, 280, 60, 30);
+
+        ptr.setBackground(new java.awt.Color(5, 15, 25));
+        ptr.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        ptr.setForeground(new java.awt.Color(255, 255, 255));
+        ptr.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                ptrKeyPressed(evt);
+            }
+        });
+        jPanel3.add(ptr);
+        ptr.setBounds(580, 160, 190, 30);
+
+        pts.setBackground(new java.awt.Color(5, 15, 25));
+        pts.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        pts.setForeground(new java.awt.Color(255, 255, 255));
+        pts.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                ptsKeyPressed(evt);
+            }
+        });
+        jPanel3.add(pts);
+        pts.setBounds(580, 200, 190, 30);
+
+        jLabel19.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel19.setText("%  =");
+        jPanel3.add(jLabel19);
+        jLabel19.setBounds(640, 280, 60, 30);
+
+        rate.setBackground(new java.awt.Color(5, 15, 25));
+        rate.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        rate.setForeground(new java.awt.Color(255, 255, 255));
+        rate.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                rateKeyPressed(evt);
+            }
+        });
+        jPanel3.add(rate);
+        rate.setBounds(580, 240, 190, 30);
+
+        mrp.setBackground(new java.awt.Color(5, 15, 25));
+        mrp.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        mrp.setForeground(new java.awt.Color(255, 255, 255));
+        mrp.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                mrpKeyPressed(evt);
+            }
+        });
+        jPanel3.add(mrp);
+        mrp.setBounds(580, 320, 190, 30);
+
+        jLabel11.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("PTS *");
+        jPanel3.add(jLabel11);
+        jLabel11.setBounds(500, 200, 70, 30);
+
+        jLabel8.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("PTR *");
+        jPanel3.add(jLabel8);
+        jLabel8.setBounds(500, 160, 70, 30);
+
+        jLabel7.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Scheme");
+        jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel3.add(jLabel7);
+        jLabel7.setBounds(500, 120, 60, 30);
+
+        jLabel6.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("QTY *");
+        jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel3.add(jLabel6);
+        jLabel6.setBounds(500, 80, 67, 30);
+
+        jLabel5.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Expiry *");
+        jLabel5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel3.add(jLabel5);
+        jLabel5.setBounds(90, 240, 80, 30);
+
+        jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Batch *");
+        jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel3.add(jLabel4);
+        jLabel4.setBounds(90, 200, 76, 31);
+
+        jButton1.setBackground(new java.awt.Color(255, 152, 63));
+        jButton1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Add Item");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1);
-        jButton1.setBounds(90, 600, 270, 36);
+        jButton1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jButton1KeyPressed(evt);
+            }
+        });
+        jPanel3.add(jButton1);
+        jButton1.setBounds(90, 370, 680, 50);
 
-        ptr.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        getContentPane().add(ptr);
-        ptr.setBounds(170, 420, 190, 30);
+        jLabel17.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel17.setText("MRP *");
+        jPanel3.add(jLabel17);
+        jLabel17.setBounds(500, 320, 50, 30);
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel8.setText("PTR *");
-        getContentPane().add(jLabel8);
-        jLabel8.setBounds(90, 420, 70, 30);
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3WyW.gif"))); // NOI18N
+        jPanel3.add(jLabel14);
+        jLabel14.setBounds(200, 0, 660, 570);
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel9.setText("Rate *");
-        getContentPane().add(jLabel9);
-        jLabel9.setBounds(90, 500, 50, 30);
+        getContentPane().add(jPanel3);
+        jPanel3.setBounds(0, -10, 920, 590);
 
-        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel12.setText("MRP *");
-        getContentPane().add(jLabel12);
-        jLabel12.setBounds(90, 540, 50, 30);
-
-        rate.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        getContentPane().add(rate);
-        rate.setBounds(170, 500, 190, 30);
-
-        mrp.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        getContentPane().add(mrp);
-        mrp.setBounds(170, 540, 190, 30);
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 88, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 638, Short.MAX_VALUE)
-        );
-
-        getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 10, 90, 640);
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 98, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 638, Short.MAX_VALUE)
-        );
-
-        getContentPane().add(jPanel2);
-        jPanel2.setBounds(360, 10, 100, 640);
-
-        setSize(new java.awt.Dimension(476, 694));
+        setSize(new java.awt.Dimension(916, 618));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -302,45 +471,239 @@ public class AddItem extends javax.swing.JFrame {
     private void qtyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qtyActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_qtyActionPerformed
+    private void setall(boolean b) {
+        jLabel1.setVisible(b);
+        jLabel2.setVisible(b);
+        jLabel3.setVisible(b);
+        jLabel4.setVisible(b);
+        jLabel5.setVisible(b);
+        jLabel6.setVisible(b);
+        jLabel7.setVisible(b);
+        jLabel8.setVisible(b);
+        jLabel9.setVisible(b);
+        jLabel10.setVisible(b);
+        jLabel11.setVisible(b);
+        jLabel16.setVisible(b);
+        jLabel17.setVisible(b);
+        jLabel18.setVisible(b);
+        jLabel19.setVisible(b);
+        
+//        jLabel12.setVisible(b);
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        product.setVisible(b);
+        HSN.setVisible(b);
+        pack.setVisible(b);
+        batch.setVisible(b);
+        qty.setVisible(b);
+        Sc1.setVisible(b);
+        sc2.setVisible(b);
+        ptr.setVisible(b);
+        pts.setVisible(b);
+        rate.setVisible(b);
+        mrp.setVisible(b);
 
-        try {
-            String HSNCode = HSN.getText();
-            String Product = product.getText();
-            String Pack = pack.getText();
-            String Batch = batch.getText();
-            String Expire = month.getSelectedItem() + "/" + year.getSelectedItem();
-            int GST = Integer.parseInt(gst.getSelectedItem().toString());
-            int QTY = Integer.parseInt(qty.getText());
-            String Scheme = Sc1.getText() + "+" + sc2.getText();
-            Double PTS = Double.parseDouble(pts.getText());
-            Double PTR = Double.parseDouble(ptr.getText());
-            Double Rate = Double.parseDouble(rate.getText());
-            Double MRP = Double.parseDouble(mrp.getText());
-            Med med = new Med(0,HSNCode, Product, Pack, Batch, Expire, GST, QTY, Scheme, PTS, PTR, Rate, MRP);
-            GetDBData dBData = new GetDBData();
-            boolean result = dBData.InsertItem(med);
-            if (result) {
-                JOptionPane.showMessageDialog(rootPane, "Inserted Successfully");
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "Failed");
+        jButton1.setVisible(b);
+        month.setVisible(b);
+        year.setVisible(b);
+        gst.setVisible(b);
+        
+        jTextField1.setVisible(b);
+jTextField2.setVisible(b);
+    }
+    public void add()
+    {
+    Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                setall(false);
+                jLabel14.setVisible(true);
             }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(rootPane, ex);
-        }
-        HSN.setText("");
-        product.setText("");
-        pack.setText("");
-        batch.setText("");
-        qty.setText("");
-        Sc1.setText("");
-        sc2.setText("");
-        pts.setText("");
-        ptr.setText("");
-        rate.setText("");
-        mrp.setText("");
+
+        });
+        Thread t1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String HSNCode = HSN.getText();
+                String Product = product.getText();
+                String Pack = pack.getText();
+                String Batch = batch.getText();
+                if (HSNCode.trim().isEmpty() || Product.trim().isEmpty() || Pack.trim().isEmpty() || Batch.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane, "Please provide Correct Inputs");
+                } else {
+                    try {
+                        String Expire = month.getSelectedItem() + "/" + year.getSelectedItem();
+                        int GST = Integer.parseInt(gst.getSelectedItem().toString());
+                        int QTY = Integer.parseInt(qty.getText());
+                        String Scheme = Sc1.getText() + "+" + sc2.getText();
+                        Double PTS = Double.parseDouble(pts.getText());
+                        Double PTR = Double.parseDouble(ptr.getText());
+                        Double Rate = Double.parseDouble(rate.getText());
+                        Double MRP = Double.parseDouble(mrp.getText());
+                        Double GSTPaid=Double.parseDouble(jTextField1.getText());
+                        Med med = new Med(0l, HSNCode, Product, Pack, Batch, Expire, GST, QTY, Scheme, PTS, PTR, Rate, GSTPaid , MRP );
+//                        GetDBData dBData = new GetDBData();
+                        MongoDBCalls DB = new MongoDBCalls();
+                        boolean result = DB.insertItem(med);//dBData.InsertItem(med);
+                        if (result) {
+                            JOptionPane.showMessageDialog(rootPane, "Inserted Successfully");
+                        } else {
+                            JOptionPane.showMessageDialog(rootPane, "Failed");
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(rootPane, "Please Provide Correct Inputs...");
+                    }
+                }
+                HSN.setText("");
+                product.setText("");
+                pack.setText("");
+                batch.setText("");
+                qty.setText("");
+                Sc1.setText("");
+                sc2.setText("");
+                pts.setText("");
+                ptr.setText("");
+                rate.setText("");
+                mrp.setText("");
+
+                setall(true);
+                jLabel14.setVisible(false);
+                
+            }
+
+        });
+        t.start();
+        t1.start();
+    
+    }
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        add();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void Sc1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Sc1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Sc1ActionPerformed
+
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+        System.out.println(jTextField1.getText());
+        double gst=Double.parseDouble(jTextField1.getText());
+        Double gstamount=gst*Double.parseDouble(rate.getText())*Double.parseDouble(qty.getText())/100;
+        jTextField2.setText(gstamount.toString());
+    }//GEN-LAST:event_jTextField1KeyReleased
+
+    private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
+        System.out.println(jTextField2.getText());
+        double gstamount=Double.parseDouble(jTextField2.getText());
+        Double gst=gstamount*100/(Double.parseDouble(rate.getText())*Double.parseDouble(qty.getText()));
+        jTextField1.setText(gst.toString());
+    }//GEN-LAST:event_jTextField2KeyReleased
+
+    private void jButton1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyPressed
+         if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }
+    }//GEN-LAST:event_jButton1KeyPressed
+
+    private void mrpKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mrpKeyPressed
+       if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }
+    }//GEN-LAST:event_mrpKeyPressed
+
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+       if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }
+    }//GEN-LAST:event_formKeyPressed
+
+    private void productKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }
+    }//GEN-LAST:event_productKeyPressed
+
+    private void HSNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_HSNKeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }       // TODO add your handling code here:
+    }//GEN-LAST:event_HSNKeyPressed
+
+    private void packKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_packKeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }      // TODO add your handling code here:
+    }//GEN-LAST:event_packKeyPressed
+
+    private void batchKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_batchKeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }        // TODO add your handling code here:
+    }//GEN-LAST:event_batchKeyPressed
+
+    private void monthKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_monthKeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }        // TODO add your handling code here:
+    }//GEN-LAST:event_monthKeyPressed
+
+    private void yearKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_yearKeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }       // TODO add your handling code here:
+    }//GEN-LAST:event_yearKeyPressed
+
+    private void gstKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_gstKeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }     // TODO add your handling code here:
+    }//GEN-LAST:event_gstKeyPressed
+
+    private void qtyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_qtyKeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }      // TODO add your handling code here:
+    }//GEN-LAST:event_qtyKeyPressed
+
+    private void Sc1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Sc1KeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }       // TODO add your handling code here:
+    }//GEN-LAST:event_Sc1KeyPressed
+
+    private void sc2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sc2KeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }       // TODO add your handling code here:
+    }//GEN-LAST:event_sc2KeyPressed
+
+    private void ptrKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ptrKeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }        // TODO add your handling code here:
+    }//GEN-LAST:event_ptrKeyPressed
+
+    private void ptsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ptsKeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }        // TODO add your handling code here:
+    }//GEN-LAST:event_ptsKeyPressed
+
+    private void rateKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rateKeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }        // TODO add your handling code here:
+    }//GEN-LAST:event_rateKeyPressed
+
+    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1KeyPressed
+
+    private void jTextField2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyPressed
+ if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+           add();           
+       }      // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2KeyPressed
 
     /**
      * @param args the command line arguments
@@ -386,8 +749,13 @@ public class AddItem extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -396,9 +764,10 @@ public class AddItem extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JComboBox<String> month;
     private javax.swing.JTextField mrp;
     private javax.swing.JTextField pack;
