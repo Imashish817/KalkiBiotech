@@ -26,7 +26,10 @@ import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import java.util.Date;
 import javax.swing.JPanel;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javax.swing.JFrame;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -77,31 +80,9 @@ public class Billing extends javax.swing.JFrame {
     GetDBData DB = new GetDBData();
     MongoDBCalls dBCalls = new MongoDBCalls();
 
-    public String getfinancialyear() {
-        Integer year = Calendar.getInstance().get(Calendar.YEAR);
-        String financialyear="";
-        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        if (month < 3) {
-            financialyear= (year - 1) + "-" + year.toString().substring(2);
-        } else {
-            financialyear= year + "-" + (++year).toString().substring(2);
-        }
-        return financialyear;
-    }
-    
-    public String getInvoiceNo(){
-        String invoiceno=dBCalls.getInvoiceCounter().toString();
-        while(invoiceno.length() !=4)
-        {
-        invoiceno="0"+invoiceno;
-        }
-        return invoiceno;
-    }
-
-
-ArrayList<Customer> customers = new ArrayList<>();
+    ArrayList<Customer> customers = new ArrayList<>();
     LocalDate date = LocalDate.now();
-    String inv = getfinancialyear()+"/KB/"+getInvoiceNo();
+    String inv = Utility.getfinancialyear() + "/KB/" + Utility.getInvoiceNo();
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
     /**
@@ -130,8 +111,8 @@ ArrayList<Customer> customers = new ArrayList<>();
         jComboBox3 = new javax.swing.JComboBox<>();
         jLabel59 = new javax.swing.JLabel();
         jLabel63 = new javax.swing.JLabel();
-        jLabel64 = new javax.swing.JLabel();
         jProgressBar1 = new javax.swing.JProgressBar();
+        jLabel64 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         SubmitBTN = new javax.swing.JButton();
@@ -241,7 +222,6 @@ ArrayList<Customer> customers = new ArrayList<>();
         jTextField2.setBackground(new java.awt.Color(29, 31, 33));
         jTextField2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jTextField2.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField2.setText("jTextField2");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
@@ -255,6 +235,7 @@ ArrayList<Customer> customers = new ArrayList<>();
         jTextField3.setBackground(new java.awt.Color(29, 31, 33));
         jTextField3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jTextField3.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField3.setText("0.0");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField3ActionPerformed(evt);
@@ -310,6 +291,11 @@ ArrayList<Customer> customers = new ArrayList<>();
                 jButton3ActionPerformed(evt);
             }
         });
+        jButton3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jButton3KeyPressed(evt);
+            }
+        });
 
         jComboBox3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "By Cash", "By Credit", "By Check", "By NEFT", "Other", " " }));
@@ -322,8 +308,6 @@ ArrayList<Customer> customers = new ArrayList<>();
         jLabel63.setForeground(new java.awt.Color(255, 255, 255));
         jLabel63.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
-        jLabel64.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3WyW.gif"))); // NOI18N
-
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -332,7 +316,7 @@ ArrayList<Customer> customers = new ArrayList<>();
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addGap(0, 118, Short.MAX_VALUE)
+                        .addGap(0, 127, Short.MAX_VALUE)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addComponent(jLabel54, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -360,17 +344,11 @@ ArrayList<Customer> customers = new ArrayList<>();
                                             .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                        .addGap(130, 130, 130))
+                        .addGap(121, 121, 121))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel63, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel61, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap())))
-            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                    .addContainerGap(47, Short.MAX_VALUE)
-                    .addComponent(jLabel64, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(65, Short.MAX_VALUE)))
+                        .addComponent(jLabel61, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addComponent(jLabel63, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -413,14 +391,9 @@ ArrayList<Customer> customers = new ArrayList<>();
                     .addComponent(jLabel55, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                 .addComponent(jLabel63, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41))
-            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel64, javax.swing.GroupLayout.PREFERRED_SIZE, 478, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(48, 48, 48))
         );
 
         javax.swing.GroupLayout jDialog2Layout = new javax.swing.GroupLayout(jDialog2.getContentPane());
@@ -435,6 +408,8 @@ ArrayList<Customer> customers = new ArrayList<>();
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 493, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
+
+        jLabel64.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3WyW.gif"))); // NOI18N
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Kalki Biotech || Billing");
@@ -549,7 +524,11 @@ ArrayList<Customer> customers = new ArrayList<>();
         });
         jTable1.setGridColor(new java.awt.Color(29, 31, 33));
         jTable1.setSelectionBackground(new java.awt.Color(255, 152, 63));
-        jTable1.setShowVerticalLines(false);
+        jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTable1KeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setMinWidth(30);
@@ -765,6 +744,11 @@ ArrayList<Customer> customers = new ArrayList<>();
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+        jButton1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jButton1KeyPressed(evt);
             }
         });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 330, 40));
@@ -1022,6 +1006,11 @@ ArrayList<Customer> customers = new ArrayList<>();
                 jCheckBox1ActionPerformed(evt);
             }
         });
+        jCheckBox1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jCheckBox1KeyPressed(evt);
+            }
+        });
         jPanel3.add(jCheckBox1);
         jCheckBox1.setBounds(20, 20, 310, 23);
 
@@ -1255,14 +1244,11 @@ ArrayList<Customer> customers = new ArrayList<>();
     }
     Customer shiptoAddress;
     long shippingC_id;
-    private void SubmitBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubmitBTNActionPerformed
+
+    public void submitbtnact() {
         if (jTextField11.getText().trim().length() == 0
                 || jTextField12.getText().trim().length() == 0
-                || jTextField13.getText().trim().length() == 0
                 || jTextField14.getText().trim().length() == 0
-                || jTextField15.getText().trim().length() == 0
-                || jTextField16.getText().trim().length() == 0
-                || jTextField17.getText().trim().length() == 0
                 || jTextField18.getText().trim().length() == 0) {
             JOptionPane.showMessageDialog(rootPane, "Please Fill Shipping Address.");
         } else {
@@ -1287,9 +1273,13 @@ ArrayList<Customer> customers = new ArrayList<>();
             jTextField2.setEditable(false);
             jTextField2.setText(GrandTotal.toString());
             jLabel64.setVisible(false);
+            jLabel55.setText(GrandTotal.toString());
 
         }
 
+    }
+    private void SubmitBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubmitBTNActionPerformed
+        submitbtnact();
 
     }//GEN-LAST:event_SubmitBTNActionPerformed
 
@@ -1303,11 +1293,10 @@ ArrayList<Customer> customers = new ArrayList<>();
             jComboBox2.removeAllItems();
 
             fillCustomers();
-        
 
-} catch (Exception ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Billing.class
-.getName()).log(Level.SEVERE, null, ex);
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton5ActionPerformed
     long customer_id = 0;
@@ -1362,10 +1351,23 @@ ArrayList<Customer> customers = new ArrayList<>();
         jButton3.setVisible(b);
 
     }
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    Double GST0 = 0.0;
+    Double IGST0 = 0.0;
+    Double GST5 = 0.0;
+    Double IGST5 = 0.0;
+    Double GST12 = 0.0;
+    Double IGST12 = 0.0;
+    Double GST18 = 0.0;
+    Double IGST18 = 0.0;
+    Double TotalAgainstGST0 = 0.0;
+    Double TotalAgainstGST5 = 0.0;
+    Double TotalAgainstGST12 = 0.0;
+    Double TotalAgainstGST18 = 0.0;
+
+    private void DoBilling() {
         Thread t = new Thread(new Runnable() {
             @Override
-        public void run() {
+            public void run() {
                 setall(false);
                 jLabel64.setVisible(true);
             }
@@ -1373,11 +1375,9 @@ ArrayList<Customer> customers = new ArrayList<>();
         });
         Thread t1 = new Thread(new Runnable() {
             @Override
-        public void run() {
+            public void run() {
                 if (jTextField2.getText().trim().length() == 0
-                        || jTextField3.getText().trim().length() == 0
-                        || jTextField9.getText().trim().length() == 0
-                        || jTextField19.getText().trim().length() == 0) {
+                        || jTextField3.getText().trim().length() == 0) {
                     JOptionPane.showMessageDialog(rootPane, "Please Enter All Values");
                 } else {
                     if (!jCheckBox1.isSelected()) {
@@ -1385,49 +1385,95 @@ ArrayList<Customer> customers = new ArrayList<>();
                     }
                     AmountPaid = Double.valueOf(jTextField3.getText());
                     Remark = jComboBox3.getSelectedItem() + " - " + jTextField9.getText();
-                   jLabel63.setText("Adding Bill To DataBase......");
-//                boolean b = DB.AddBill(inv, jLabel38.getText(), customer_id, GrandTaxable, GrandGST, GrandTotal, GrandProfit, java.sql.Date.valueOf(LocalDate.now()), AmountPaid, Remark);
-                        boolean b = dBCalls.AddBill(inv, jLabel38.getText(), customer_id, shippingC_id, GrandTaxable, GrandGST, GrandTotal, GrandProfit, java.sql.Date.valueOf(LocalDate.now()), AmountPaid, Remark, jTextField19.getText());
-                        //update invoice counter;
-                        dBCalls.updateInvoiceCounter(Integer.parseInt(inv.split("/KB/")[1]));
-                        try {
-                            if (billedMeds.isEmpty()) {
-                            } else {
-                                int[] updateCounts = dBCalls.insertBilledMeds(billedMeds, inv, java.sql.Date.valueOf(LocalDate.now()));
-                                 jLabel63.setText("updating Medicines To DataBase......");
-                                int[] arr = checkUpdateCounts(updateCounts);
+                    jLabel63.setText("Adding Bill To DataBase......");
+
+                    Date d;
+                    d = new Date();
+                    long milliseconds = d.getTime();
+                    String gstin = jLabel43.getText();
+                    String Destination = jTextField18.getText();
+                    boolean b = dBCalls.AddBill(inv, jLabel38.getText(), customer_id, Destination, shippingC_id, gstin, GrandTaxable, GrandGST, GrandTotal, GrandProfit, milliseconds, AmountPaid, Remark, jTextField19.getText());
+                    dBCalls.updateInvoiceCounter(Integer.parseInt(inv.split("/KB/")[1]));
+                    try {
+                        if (billedMeds.isEmpty()) {
+                        } else {
+                            int[] updateCounts = dBCalls.insertBilledMeds(billedMeds, inv, milliseconds);
+                            jLabel63.setText("updating Medicines To DataBase......");
+                            int[] arr = checkUpdateCounts(updateCounts);
 //                        JOptionPane.showMessageDialog(rootPane, "Operation Completed \n succes: " + arr[0] + "  failure " + arr[1]);
-                                //remove inventry from items table
-                                for (int i = 0; i < billedMeds.size(); i++) {
-                                    System.out.println(billedMeds.get(i).getProduct() + "--" + billedMeds.get(i).getId());
-                                    dBCalls.updateitemlist(billedMeds.get(i).getNetQTY(), billedMeds.get(i).getId());
-                                }
+//remove inventry from items table
+                            for (int i = 0; i < billedMeds.size(); i++) {
+                                System.out.println(billedMeds.get(i).getProduct() + "--" + billedMeds.get(i).getId());
+                                dBCalls.updateitemlist(billedMeds.get(i).getNetQTY(), billedMeds.get(i).getId());
                             }
-                            jLabel63.setText("finalizing Bill......");
-                        
-
-} catch (Exception ex) {
-                            Logger.getLogger(Billing.class
-.getName()).log(Level.SEVERE, null, ex);
                         }
-                        jDialog2.pack();
-                        jDialog2.setLocationRelativeTo(null);
-                        jDialog2.setVisible(false);
-                        jDialog2.setSize(190, 230);
-                        PrintingJob job = new PrintingJob();
-                        job.basicDetails(inv, date);
-                        job.setBilledDetails(customers.get(customer_index));
-                        job.setShippingDetails(shiptoAddress);
-                        job.Meds(billedMeds, GrandGST, GrandTaxable, GrandTotal, jTextField3.getText(), Remark, jLabel55.getText(), jTextField19.getText());
-                        //todo: print
-                        //print mech..........
-                    }
-                
-                setall(true);
-                jLabel64.setVisible(false);
-                dispose();
+                        jLabel63.setText("finalizing Bill......");
 
-                new JFrame().setVisible(false);
+                    } catch (Exception ex) {
+                        Logger.getLogger(Billing.class
+                                .getName()).log(Level.SEVERE, null, ex);
+                    }
+                    jDialog2.pack();
+                    jDialog2.setLocationRelativeTo(null);
+                    jDialog2.setVisible(false);
+                    jDialog2.setSize(190, 230);
+                    for (int i = 0; i < billedMeds.size(); i++) {
+                        if (billedMeds.get(i).getGSTPercentage() == 0 && jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
+                            TotalAgainstGST0 = TotalAgainstGST0 + billedMeds.get(i).getTaxableAmount();
+                            GST0 = GST0 + billedMeds.get(i).getGST();
+                        }
+                        if (billedMeds.get(i).getGSTPercentage() == 5 && jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
+                            TotalAgainstGST5 = TotalAgainstGST5 + billedMeds.get(i).getTaxableAmount();
+                            GST5 = GST5 + billedMeds.get(i).getGST();
+                        }
+                        if (billedMeds.get(i).getGSTPercentage() == 12 && jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
+                            TotalAgainstGST12 = TotalAgainstGST12 + billedMeds.get(i).getTaxableAmount();
+                            GST12 = GST12 + billedMeds.get(i).getGST();
+                        }
+                        if (billedMeds.get(i).getGSTPercentage() == 18 && jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
+                            TotalAgainstGST18 = TotalAgainstGST18 + billedMeds.get(i).getTaxableAmount();
+                            GST18 = GST18 + billedMeds.get(i).getGST();
+                        }
+                         if (billedMeds.get(i).getGSTPercentage() == 0 && !jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
+                           TotalAgainstGST0 = TotalAgainstGST0 + billedMeds.get(i).getTaxableAmount();
+                            IGST0 = IGST0 + billedMeds.get(i).getGST();
+                        }
+                         if (billedMeds.get(i).getGSTPercentage() == 5 && !jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
+                           TotalAgainstGST5 = TotalAgainstGST5 + billedMeds.get(i).getTaxableAmount();
+                            IGST5 = IGST5 + billedMeds.get(i).getGST();
+                        }
+                         if (billedMeds.get(i).getGSTPercentage() == 12 && !jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
+                           TotalAgainstGST12 = TotalAgainstGST12 + billedMeds.get(i).getTaxableAmount();
+                            IGST12 = IGST12 + billedMeds.get(i).getGST();
+                        }
+                         if (billedMeds.get(i).getGSTPercentage() == 18 && !jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
+                           TotalAgainstGST18 = TotalAgainstGST18 + billedMeds.get(i).getTaxableAmount();
+                            IGST18 = IGST18 + billedMeds.get(i).getGST();
+                        }
+                    }
+                    ArrayList<Double[]> GSTdetails=new ArrayList<>();
+                    Double vals0[]={TotalAgainstGST0,GST0/2,GST0/2,IGST0,GST0+IGST0};
+                    GSTdetails.add(vals0);
+                    Double vals5[]={TotalAgainstGST5,GST5/2,GST5/2,IGST5,GST5+IGST5};
+                    GSTdetails.add(vals5);
+                    Double vals12[]={TotalAgainstGST12,GST12/2,GST12/2,IGST12,GST12+IGST12};
+                    GSTdetails.add(vals12);
+                    Double vals18[]={TotalAgainstGST18,GST18/2,GST18/2,IGST18,GST18+IGST18};
+                    GSTdetails.add(vals18);
+                    PrintingJob job = new PrintingJob();
+
+                    job.basicDetails(inv, date);
+                    job.setBilledDetails(customers.get(customer_index));
+                    job.setShippingDetails(shiptoAddress);
+                    job.GSTDetails(GSTdetails);
+                    job.Meds(billedMeds, GrandGST, GrandTaxable, GrandTotal, jTextField3.getText(), Remark, jLabel55.getText(), jTextField19.getText());
+
+                    setall(true);
+                    jLabel64.setVisible(false);
+                    dispose();
+
+                    new JFrame().setVisible(false);
+                }
             }
 
         });
@@ -1435,6 +1481,9 @@ ArrayList<Customer> customers = new ArrayList<>();
         t.start();
         t1.start();
 
+    }
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        DoBilling();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
@@ -1447,8 +1496,7 @@ ArrayList<Customer> customers = new ArrayList<>();
         Double amountLeft = GrandTotal - amountpaid;
         jLabel55.setText(amountLeft.toString());
     }//GEN-LAST:event_jTextField3KeyReleased
-
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void fillshipingDetails() {
         if (jCheckBox1.isSelected()) {
             Customer customer = customers.get(customer_index);
             jTextField11.setText(customer.getFirm_Name());
@@ -1471,7 +1519,10 @@ ArrayList<Customer> customers = new ArrayList<>();
             jTextField17.setText("");
             jTextField18.setText("");
         }
+    }
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
 
+        fillshipingDetails();
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jTextField12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField12ActionPerformed
@@ -1532,7 +1583,7 @@ ArrayList<Customer> customers = new ArrayList<>();
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField9ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void AddMedicinsinTable() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         Med medicine = Meds.get(selected_index);
         String ED = jTextField1.getText();
@@ -1578,25 +1629,25 @@ ArrayList<Customer> customers = new ArrayList<>();
             GrandTotal = GrandTotal + NetTotal;
             Double Profit = TaxableAmount - (medicine.getRate() * NetQTY);
             GrandProfit = GrandProfit + Profit;
-            BilledMeds billedMed = new BilledMeds(medicine.getID(), 
-                    medicine.getHSNCode(), 
-                    medicine.getBatch(), 
-                    medicine.getProduct(), 
-                    medicine.getPack(), 
-                    medicine.getMRP(), 
-                    QTY, 
+            BilledMeds billedMed = new BilledMeds(medicine.getID(),
+                    medicine.getHSNCode(),
+                    medicine.getBatch(),
+                    medicine.getProduct(),
+                    medicine.getPack(),
+                    medicine.getMRP(),
+                    QTY,
                     jTextField7.getText() + " + " + jTextField8.getText(),
-                    NetQTY, 
+                    NetQTY,
                     medicine.getExpire(),
-                    Double.valueOf(df.format(PTS)) ,
-                    Double.valueOf(df.format(PTR)) ,
-                    Double.valueOf(df.format(ExtraDiscount)) ,
-                    Double.valueOf(df.format(TaxableAmount)) ,
-                    Double.valueOf(df.format(medicine.getGST())) , 
-                    Double.valueOf(df.format(GST)), 
-                    Double.valueOf(df.format(NetTotal)) ,
-                    Double.valueOf(df.format(Profit)) 
-                    );
+                    Double.valueOf(df.format(PTS)),
+                    Double.valueOf(df.format(PTR)),
+                    Double.valueOf(df.format(ExtraDiscount)),
+                    Double.valueOf(df.format(TaxableAmount)),
+                    Double.valueOf(df.format(medicine.getGST())),
+                    Double.valueOf(df.format(GST)),
+                    Double.valueOf(df.format(NetTotal)),
+                    Double.valueOf(df.format(Profit))
+            );
             billedMeds.add(billedMed);
             Object[] row = {
                 billedMeds.size(),
@@ -1613,18 +1664,21 @@ ArrayList<Customer> customers = new ArrayList<>();
                 billedMed.getPTR(),//PTR
                 billedMed.getDiscount(),
                 billedMed.TaxableAmount,
-                "<html>"+billedMed.GSTPercentage.toString()+"<br>"+billedMed.GST.toString()+"</html>",
-//                billedMed.GSTPercentage.toString()+ "\n"+billedMed.GST.toString(),
+                "<html>" + billedMed.GSTPercentage.toString() + "<br>" + billedMed.GST.toString() + "</html>",
+                //                billedMed.GSTPercentage.toString()+ "\n"+billedMed.GST.toString(),
                 billedMed.NetTotal,
                 billedMed.Profit
             };
             model.addRow(row);
-            jTable1.setRowHeight(billedMeds.size()-1, 30);
+            jTable1.setRowHeight(40);
             jLabel7.setText(df.format(GrandTotal));
             jLabel24.setText(df.format(GrandGST));
             jLabel26.setText(df.format(GrandTaxable));
             jLabel50.setText(df.format(GrandProfit));
         }
+    }
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        AddMedicinsinTable();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseExited
@@ -1684,6 +1738,34 @@ ArrayList<Customer> customers = new ArrayList<>();
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
+    private void jCheckBox1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jCheckBox1KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            jCheckBox1.setSelected(true);
+            fillshipingDetails();
+
+        }
+    }//GEN-LAST:event_jCheckBox1KeyPressed
+
+    private void jButton1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            AddMedicinsinTable();
+        }
+    }//GEN-LAST:event_jButton1KeyPressed
+
+    private void jButton3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton3KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            DoBilling();
+
+        }
+    }//GEN-LAST:event_jButton3KeyPressed
+
+    private void jTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            submitbtnact();
+
+        }
+    }//GEN-LAST:event_jTable1KeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -1698,28 +1780,24 @@ ArrayList<Customer> customers = new ArrayList<>();
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-                
 
-}
+                }
             }
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(Billing.class
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-} catch (InstantiationException ex) {
+        } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(Billing.class
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-} catch (IllegalAccessException ex) {
+        } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(Billing.class
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
-} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Billing.class
-.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 //        UIManager.setLookAndFeel("com.jtattoo.plaf.hifi.HiFiLookAndFeel");
@@ -1844,48 +1922,48 @@ ArrayList<Customer> customers = new ArrayList<>();
     // End of variables declaration//GEN-END:variables
 class RoundedPanel extends JPanel {
 
-    private Color backgroundColor;
-    private int cornerRadius = 15;
+        private Color backgroundColor;
+        private int cornerRadius = 15;
 
-    public RoundedPanel(LayoutManager layout, int radius) {
-        super(layout);
-        cornerRadius = radius;
-    }
-
-    public RoundedPanel(LayoutManager layout, int radius, Color bgColor) {
-        super(layout);
-        cornerRadius = radius;
-        backgroundColor = bgColor;
-    }
-
-    public RoundedPanel(int radius) {
-        super();
-        cornerRadius = radius;
-    }
-
-    public RoundedPanel(int radius, Color bgColor) {
-        super();
-        cornerRadius = radius;
-        backgroundColor = bgColor;
-    }
-
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Dimension arcs = new Dimension(cornerRadius, cornerRadius);
-        int width = getWidth();
-        int height = getHeight();
-        Graphics2D graphics = (Graphics2D) g;
-        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        //Draws the rounded panel with borders.
-        if (backgroundColor != null) {
-            graphics.setColor(backgroundColor);
-        } else {
-            graphics.setColor(getBackground());
+        public RoundedPanel(LayoutManager layout, int radius) {
+            super(layout);
+            cornerRadius = radius;
         }
-        graphics.fillRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height); //paint background
-        graphics.setColor(getForeground());
-        graphics.drawRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height); //paint border
+
+        public RoundedPanel(LayoutManager layout, int radius, Color bgColor) {
+            super(layout);
+            cornerRadius = radius;
+            backgroundColor = bgColor;
+        }
+
+        public RoundedPanel(int radius) {
+            super();
+            cornerRadius = radius;
+        }
+
+        public RoundedPanel(int radius, Color bgColor) {
+            super();
+            cornerRadius = radius;
+            backgroundColor = bgColor;
+        }
+
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Dimension arcs = new Dimension(cornerRadius, cornerRadius);
+            int width = getWidth();
+            int height = getHeight();
+            Graphics2D graphics = (Graphics2D) g;
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            //Draws the rounded panel with borders.
+            if (backgroundColor != null) {
+                graphics.setColor(backgroundColor);
+            } else {
+                graphics.setColor(getBackground());
+            }
+            graphics.fillRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height); //paint background
+            graphics.setColor(getForeground());
+            graphics.drawRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height); //paint border
+        }
     }
-}
 }

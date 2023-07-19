@@ -36,8 +36,6 @@ public class Home extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -45,20 +43,13 @@ public class Home extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Kalki Biotech || Welcome");
         getContentPane().setLayout(null);
-
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("KalKi Biotech");
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(0, 10, 1070, 43);
-
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3WyW.gif"))); // NOI18N
-        getContentPane().add(jLabel3);
-        jLabel3.setBounds(300, 50, 510, 500);
 
         jPanel1.setBackground(new java.awt.Color(5, 15, 25));
         jPanel1.setLayout(null);
@@ -82,7 +73,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton1);
-        jButton1.setBounds(188, 150, 213, 107);
+        jButton1.setBounds(200, 140, 190, 100);
 
         jButton2.setBackground(new java.awt.Color(255, 152, 63));
         jButton2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -103,7 +94,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton2);
-        jButton2.setBounds(451, 150, 213, 107);
+        jButton2.setBounds(440, 140, 180, 100);
 
         jButton3.setBackground(new java.awt.Color(255, 152, 63));
         jButton3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -124,12 +115,12 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton3);
-        jButton3.setBounds(709, 150, 213, 107);
+        jButton3.setBounds(670, 140, 180, 100);
 
         jButton4.setBackground(new java.awt.Color(255, 152, 63));
         jButton4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("ADD MEDICINE");
+        jButton4.setText("PURCHASE ENTRY");
         jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -145,7 +136,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton4);
-        jButton4.setBounds(188, 332, 213, 107);
+        jButton4.setBounds(200, 290, 190, 100);
 
         jButton5.setBackground(new java.awt.Color(255, 152, 63));
         jButton5.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -166,7 +157,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton5);
-        jButton5.setBounds(451, 332, 213, 107);
+        jButton5.setBounds(440, 290, 180, 100);
 
         jButton6.setBackground(new java.awt.Color(255, 152, 63));
         jButton6.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -181,8 +172,45 @@ public class Home extends javax.swing.JFrame {
                 jButton6MouseExited(evt);
             }
         });
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton6);
-        jButton6.setBounds(709, 332, 213, 107);
+        jButton6.setBounds(670, 290, 180, 100);
+
+        jButton7.setBackground(new java.awt.Color(255, 152, 63));
+        jButton7.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jButton7.setForeground(new java.awt.Color(255, 255, 255));
+        jButton7.setText("GST / Records");
+        jButton7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton7MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton7MouseExited(evt);
+            }
+        });
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton7);
+        jButton7.setBounds(200, 440, 190, 100);
+
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("KalKi Biotech");
+        jPanel1.add(jLabel1);
+        jLabel1.setBounds(0, 30, 1070, 43);
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3WyW.gif"))); // NOI18N
+        jPanel1.add(jLabel3);
+        jLabel3.setBounds(270, 30, 800, 580);
 
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 1070, 620);
@@ -285,6 +313,7 @@ public class Home extends javax.swing.JFrame {
         jButton4.setVisible(b);
         jButton5.setVisible(b);
         jButton6.setVisible(b);
+        jButton7.setVisible(b);
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Thread t = new Thread(new Runnable() {
@@ -404,6 +433,26 @@ public class Home extends javax.swing.JFrame {
         t1.start();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+       GSTMenu gSTMenu=new GSTMenu();
+       gSTMenu.setVisible(true);
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+       ReturnBill returnBill=new ReturnBill();
+       returnBill.setVisible(true);
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton7MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseEntered
+         jButton7.setBackground(new java.awt.Color(20, 130, 59));
+        jButton7.setFont(new java.awt.Font("Arial", 1, 18));
+    }//GEN-LAST:event_jButton7MouseEntered
+
+    private void jButton7MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseExited
+       jButton7.setBackground(new java.awt.Color(255, 152, 63));
+        jButton7.setFont(new java.awt.Font("Arial", 1, 16));
+    }//GEN-LAST:event_jButton7MouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -447,6 +496,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;

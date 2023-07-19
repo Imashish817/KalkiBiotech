@@ -6,9 +6,13 @@
 package com.mycompany.kalki;
 
 import com.mycompany.kalki.DBCalls.MongoDBCalls;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,6 +41,7 @@ public class DuplicateBill extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -53,18 +58,26 @@ public class DuplicateBill extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setForeground(new java.awt.Color(255, 0, 51));
+        jLabel2.setText("Note:  Dont Print Return Bills... ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(153, 153, 153)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(153, 153, 153)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)))
                 .addContainerGap(161, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -76,47 +89,109 @@ public class DuplicateBill extends javax.swing.JFrame {
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(176, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    MongoDBCalls dbCalls=new MongoDBCalls();
+    MongoDBCalls dbCalls = new MongoDBCalls();
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         ArrayList<Object> customer = new ArrayList<>();
-        String Inv=jTextField1.getText();
+        String Inv = jTextField1.getText();
         ArrayList<BilledMeds> Meds = new ArrayList<BilledMeds>();
         try {
-            customer=dbCalls.getbillDetails(Inv);
+            customer = dbCalls.getbillDetails(Inv);
             System.out.println(customer.size());
-            for(int i=0;i<customer.size();i++)
-            {
+            for (int i = 0; i < customer.size(); i++) {
                 System.out.println(customer.get(i));
             }
-            Customer Billed= dbCalls.getlCustomer((Long) customer.get(1));
-            Customer Shipped =dbCalls.getlCustomer((Long) customer.get(2));
+            Customer Billed = dbCalls.getlCustomer((Long) customer.get(1));
+            Customer Shipped = dbCalls.getlCustomer((Long) customer.get(2));
+            SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
             DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    LocalDate localdate = LocalDate.parse("2017-03-13", DATEFORMATTER);
-             PrintingJob job = new PrintingJob();
-                job.basicDetails(Inv, localdate);
-                job.setBilledDetails(Billed);
-                job.setShippingDetails(Shipped);
-                Meds=dbCalls.getBilledMeds(Inv);
-                
-                Double GST=(Double) customer.get(4);
-                Double Taxable =(Double) customer.get(3);
-                Double NetTotal=(Double) customer.get(5);
-                Double paid=(Double) customer.get(6);
-                String Remark=(String) customer.get(7);
-                String Transport= (String) customer.get(9);
-                Double amountleft=NetTotal - paid;
-                job.Meds(Meds,GST , Taxable,NetTotal ,paid.toString() ,Remark ,amountleft.toString() ,Transport);
+
+            Date date2 = new Date((long)customer.get(8)); 
+            LocalDate localdate = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            LocalDate localdate
+//                    = Instant.ofEpochMilli(customer.get(8)).atZone(ZoneId.systemDefault()).toLocalDate();
+//            LocalDate localdate = LocalDate.ofEpochDay(Duration.ofMillis((Long)customer.get(8)).toDays());
+            PrintingJob job = new PrintingJob();
+            Meds = dbCalls.getBilledMeds(Inv);
+            Double GST0 = 0.0;
+            Double IGST0 = 0.0;
+            Double GST5 = 0.0;
+            Double IGST5 = 0.0;
+            Double GST12 = 0.0;
+            Double IGST12 = 0.0;
+            Double GST18 = 0.0;
+            Double IGST18 = 0.0;
+            Double TotalAgainstGST0 = 0.0;
+            Double TotalAgainstGST5 = 0.0;
+            Double TotalAgainstGST12 = 0.0;
+            Double TotalAgainstGST18 = 0.0;
+            for (int i = 0; i < Meds.size(); i++) {
+                if (Meds.get(i).getGSTPercentage() == 0 && Billed.getState().equals("09-Uttar Pradesh")) {
+                    TotalAgainstGST0 = TotalAgainstGST0 + Meds.get(i).getTaxableAmount();
+                    GST0 = GST0 + Meds.get(i).getGST();
+                }
+                if (Meds.get(i).getGSTPercentage() == 5 && Billed.getState().equals("09-Uttar Pradesh")) {
+                    TotalAgainstGST5 = TotalAgainstGST5 + Meds.get(i).getTaxableAmount();
+                    GST5 = GST5 + Meds.get(i).getGST();
+                }
+                if (Meds.get(i).getGSTPercentage() == 12 && Billed.getState().equals("09-Uttar Pradesh")) {
+                    TotalAgainstGST12 = TotalAgainstGST12 + Meds.get(i).getTaxableAmount();
+                    GST12 = GST12 + Meds.get(i).getGST();
+                }
+                if (Meds.get(i).getGSTPercentage() == 18 && Billed.getState().equals("09-Uttar Pradesh")) {
+                    TotalAgainstGST18 = TotalAgainstGST18 + Meds.get(i).getTaxableAmount();
+                    GST18 = GST18 + Meds.get(i).getGST();
+                }
+                if (Meds.get(i).getGSTPercentage() == 0 && !Billed.getState().equals("09-Uttar Pradesh")) {
+                    TotalAgainstGST0 = TotalAgainstGST0 + Meds.get(i).getTaxableAmount();
+                    IGST0 = IGST0 + Meds.get(i).getGST();
+                }
+                if (Meds.get(i).getGSTPercentage() == 5 && !Billed.getState().equals("09-Uttar Pradesh")) {
+                    TotalAgainstGST5 = TotalAgainstGST5 + Meds.get(i).getTaxableAmount();
+                    IGST5 = IGST5 + Meds.get(i).getGST();
+                }
+                if (Meds.get(i).getGSTPercentage() == 12 && !Billed.getState().equals("09-Uttar Pradesh")) {
+                    TotalAgainstGST12 = TotalAgainstGST12 + Meds.get(i).getTaxableAmount();
+                    IGST12 = IGST12 + Meds.get(i).getGST();
+                }
+                if (Meds.get(i).getGSTPercentage() == 18 && !Billed.getState().equals("09-Uttar Pradesh")) {
+                    TotalAgainstGST18 = TotalAgainstGST18 + Meds.get(i).getTaxableAmount();
+                    IGST18 = IGST18 + Meds.get(i).getGST();
+                }
+            }
+            ArrayList<Double[]> GSTdetails = new ArrayList<>();
+            Double vals0[] = {TotalAgainstGST0, GST0 / 2, GST0 / 2, IGST0, GST0 + IGST0};
+            GSTdetails.add(vals0);
+            Double vals5[] = {TotalAgainstGST5, GST5 / 2, GST5 / 2, IGST5, GST5 + IGST5};
+            GSTdetails.add(vals5);
+            Double vals12[] = {TotalAgainstGST12, GST12 / 2, GST12 / 2, IGST12, GST12 + IGST12};
+            GSTdetails.add(vals12);
+            Double vals18[] = {TotalAgainstGST18, GST18 / 2, GST18 / 2, IGST18, GST18 + IGST18};
+            GSTdetails.add(vals18);
+            job.basicDetails(Inv, localdate);
+            job.setBilledDetails(Billed);
+            job.setShippingDetails(Shipped);
+            job.GSTDetails(GSTdetails);
+
+            Double GST = (Double) customer.get(4);
+            Double Taxable = (Double) customer.get(3);
+            Double NetTotal = (Double) customer.get(5);
+            Double paid = (Double) customer.get(6);
+            String Remark = (String) customer.get(7);
+            String Transport = (String) customer.get(9);
+            Double amountleft = NetTotal - paid;
+            job.Meds(Meds, GST, Taxable, NetTotal, paid.toString(), Remark, amountleft.toString(), Transport);
         } catch (Exception ex) {
             Logger.getLogger(DuplicateBill.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
 
-       
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -157,6 +232,7 @@ public class DuplicateBill extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

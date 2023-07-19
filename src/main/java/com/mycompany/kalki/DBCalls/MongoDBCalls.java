@@ -8,15 +8,12 @@ package com.mycompany.kalki.DBCalls;
 import com.mycompany.kalki.BilledMeds;
 
 import java.util.ArrayList;
-//import com.mongodb.MongoClient;
-//import com.mongodb.MongoClientURI;
 import com.mongodb.bulk.BulkWriteResult;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import java.util.List;
-
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -27,6 +24,7 @@ import com.mongodb.client.model.InsertOneModel;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.UpdateResult;
 import com.mycompany.kalki.Customer;
+import com.mycompany.kalki.GSTR1Model;
 import com.mycompany.kalki.Med;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -35,10 +33,10 @@ import java.util.Date;
 
 public class MongoDBCalls {
 
-    public boolean Login(String Password) {
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
+    private final MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
+    private final MongoDatabase db = client.getDatabase("Billing");
 
-        MongoDatabase db = client.getDatabase("Billing");
+    public boolean Login(String Password) {
 
         MongoCollection col = db.getCollection("User");
 
@@ -47,34 +45,25 @@ public class MongoDBCalls {
 
         // Execute the find query with the filter
         FindIterable<Document> cursor = col.find(filter);
-        String Pass="";
+        String Pass = "";
         for (Document doc : cursor) {
 
             Pass = doc.getString("Pass");
 
         }
-        boolean b=false;
-        if(Pass.equals(Password) )
-        {
-        b=true;
+        boolean b = false;
+        if (Pass.equals(Password)) {
+            b = true;
         }
 
         return b;
     }
 
-    public int[] insertBilledMeds(ArrayList<BilledMeds> billedMeds, String invoiceno, Date date) throws Exception {
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        MongoDatabase db = client.getDatabase("Billing");
+    public int[] insertBilledMeds(ArrayList<BilledMeds> billedMeds, String invoiceno, Long date) throws Exception {
         MongoCollection col = db.getCollection("Sold_Medicines");
-
-//        Document sampleDoc = new Document("_id", "1").append("name", "John Smith");
-//
-//        col.insertOne(sampleDoc);
         List<InsertOneModel<Document>> bulkWrites = new ArrayList<>(); // Use InsertOneModel for inserts
-
         for (int i = 0; i < billedMeds.size(); i++) {
             BilledMeds medicine = billedMeds.get(i);
-
             Document document = new Document("Invoice", invoiceno)
                     .append("Med", medicine.getProduct())
                     .append("MRP", medicine.getMRP())
@@ -99,25 +88,44 @@ public class MongoDBCalls {
         }
 
         BulkWriteResult result = col.bulkWrite(bulkWrites); // Execute the bulk write operation
-
-//    col.close(); // Close the MongoDB client
-        // Return the update counts
         return new int[]{result.getInsertedCount()};
     }
 
-    public boolean insertItem(Med med) {
+     public int[] insertRBilledMeds(ArrayList<BilledMeds> billedMeds, String invoiceno, Long date) throws Exception {
+        MongoCollection col = db.getCollection("Sold_Medicines");
+        List<InsertOneModel<Document>> bulkWrites = new ArrayList<>(); // Use InsertOneModel for inserts
+        for (int i = 0; i < billedMeds.size(); i++) {
+            BilledMeds medicine = billedMeds.get(i);
+            Document document = new Document("Invoice", invoiceno)
+                    .append("Med", medicine.getProduct())
+                    .append("MRP", medicine.getMRP())
+                    .append("HSN", medicine.getHSNCode())
+                    .append("Batch", medicine.getBatch())
+                    .append("Pack", medicine.getPack())
+                    .append("QTY", medicine.getQTY())
+                    .append("Scheme", medicine.getScheme())
+                    .append("PTR", medicine.getPTR())
+                    .append("NetQTY", medicine.getRQty())
+                    .append("Expire", medicine.getExpire())
+                    .append("PTS", medicine.getPTS())
+                    .append("Discount", medicine.getDiscount())
+                    .append("TaxableAmount", -medicine.getTaxableAmount())
+                    .append("GSTpercentage", medicine.getGSTPercentage())
+                    .append("GST", -medicine.getNewGSTAmount())
+                    .append("NetTotal", -(medicine.getNewGSTAmount()+medicine.getTaxableAmount()))
+                    .append("Date", date)
+                    .append("Profit", -medicine.getProfitDecline());
+
+            bulkWrites.add(new InsertOneModel<>(document));
+        }
+
+        BulkWriteResult result = col.bulkWrite(bulkWrites); // Execute the bulk write operation
+        return new int[]{result.getInsertedCount()};
+    }
+    
+    public boolean insertItem(Med med,String Company,String AgainstInvoice,Long BillDate) {
         try {
-//        vOwQyDKyB3SEEPKx   ashish
-//Database name  ==> Billing
-//Collection name ==> Medicine
-
-            String connectionString = "mongodb+srv://ashish:vOwQyDKyB3SEEPKx@kalki.c6mhvhs.mongodb.net/?retryWrites=true&w=majority";
-            MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-//mongodb://imashishjaiswal99:aDSvrvt0yZqYuc95@cluster0.xnac6el.mongodb.net/
-            MongoDatabase db = client.getDatabase("Billing");
-
             MongoCollection col = db.getCollection("Medicins");
-
             // Create a document to insert
             Document doc = new Document("HSNCode", med.getHSNCode())
                     .append("Product", med.getProduct())
@@ -130,13 +138,14 @@ public class MongoDBCalls {
                     .append("PTS", med.getPTS())
                     .append("PTR", med.getPTR())
                     .append("Rate", med.getRate())
-                    .append("GSTPaid", med.getGSTpercentage())
-                    .append("MRP", med.getMRP());
+                    .append("MRP", med.getMRP())
+                    .append("Company", Company)
+                    .append("AgainstInvoice", AgainstInvoice)
+                    .append("BillDate", BillDate)
+            ;
 
             // Insert the document into the collection
             col.insertOne(doc);
-
-            // Close the MongoDB connection
             return true;
         } catch (Exception ex) {
             System.out.println(ex);
@@ -146,15 +155,7 @@ public class MongoDBCalls {
 
     public ArrayList<Med> getAllMeds() throws Exception {
         ArrayList<Med> meds = new ArrayList<>();
-//     MongoClientURI connectionString = new MongoClientURI("mongodb+srv://<username>:<password>@<clustername>.mongodb.net/<dbname>");
-//    MongoClient mongoClient = new MongoClient(connectionString);
-//    MongoDatabase database = mongoClient.getDatabase("<dbname>");
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        //mongodb://imashishjaiswal99:aDSvrvt0yZqYuc95@cluster0.xnac6el.mongodb.net/
-        MongoDatabase db = client.getDatabase("Billing");
-
         MongoCollection col = db.getCollection("Medicins");
-
         // Create a filter to query documents where QTY > 0
         Bson filter = Filters.gt("QTY", 0);
 
@@ -175,9 +176,8 @@ public class MongoDBCalls {
             Double PTS = doc.getDouble("PTS");
             Double PTR = doc.getDouble("PTR");
             Double Rate = doc.getDouble("Rate");
-            Double GSTpaid = doc.getDouble("Rate");
             Double MRP = doc.getDouble("MRP");
-            Med medicine = new Med(ID, HSNCode, Product, Pack, Batch, Expire, GST, QTY, Scheme, PTS, PTR, Rate,GSTpaid, MRP);
+            Med medicine = new Med(ID, HSNCode, Product, Pack, Batch, Expire, GST, QTY, Scheme, PTS, PTR, Rate, MRP);
             meds.add(medicine);
         }
 
@@ -185,37 +185,28 @@ public class MongoDBCalls {
     }
 
     public boolean AddCustomer(Customer customer) {
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        //mongodb://imashishjaiswal99:aDSvrvt0yZqYuc95@cluster0.xnac6el.mongodb.net/
-        MongoDatabase db = client.getDatabase("Billing");
-        try{
-        MongoCollection col = db.getCollection("Customer");
-        Document customerDocument = new Document("Firm_Name", customer.getFirm_Name())
-                .append("Address", customer.getAddress())
-                .append("Mobile", customer.getMobile())
-                .append("tel", customer.getTel())
-                .append("email", customer.getEmail())
-                .append("GSTno", customer.getGSTno())
-                .append("PAN", customer.getPAN())
-                .append("DL1", customer.getDL1())
-                .append("DL2", customer.getDL2())
-                .append("State", customer.getState());
+        try {
+            MongoCollection col = db.getCollection("Customer");
+            Document customerDocument = new Document("Firm_Name", customer.getFirm_Name())
+                    .append("Address", customer.getAddress())
+                    .append("Mobile", customer.getMobile())
+                    .append("tel", customer.getTel())
+                    .append("email", customer.getEmail())
+                    .append("GSTno", customer.getGSTno())
+                    .append("PAN", customer.getPAN())
+                    .append("DL1", customer.getDL1())
+                    .append("DL2", customer.getDL2())
+                    .append("State", customer.getState());
 
-        col.insertOne(customerDocument);
-        return true;
+            col.insertOne(customerDocument);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        catch(Exception e){
-        return false;
-        }
-        
 
     }
 
     public long Customer(Customer c) {
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        //mongodb://imashishjaiswal99:aDSvrvt0yZqYuc95@cluster0.xnac6el.mongodb.net/
-        MongoDatabase db = client.getDatabase("Billing");
-
         MongoCollection col = db.getCollection("Customer");
 
         Bson filter = Filters.and(
@@ -239,10 +230,6 @@ public class MongoDBCalls {
     }
 
     public ArrayList<Customer> getAllCustomers() throws Exception {
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        //mongodb://imashishjaiswal99:aDSvrvt0yZqYuc95@cluster0.xnac6el.mongodb.net/
-        MongoDatabase db = client.getDatabase("Billing");
-
         MongoCollection col = db.getCollection("Customer");
         ArrayList<Customer> customers = new ArrayList<>();
         FindIterable<Document> cursor = col.find();
@@ -261,18 +248,10 @@ public class MongoDBCalls {
             Customer c = new Customer(id, firmName, address, mobile, tel, email, gstno, pan, dl1, dl2, state);
             customers.add(c);
         }
-
-        // Close MongoDB connections
-//    cursor.close();
-//    mongoClient.close();
         return customers;
     }
 
     public Customer getlCustomer(Long id) throws Exception {
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        //mongodb://imashishjaiswal99:aDSvrvt0yZqYuc95@cluster0.xnac6el.mongodb.net/
-        MongoDatabase db = client.getDatabase("Billing");
-
         MongoCollection col = db.getCollection("Customer");
 
         // Create a filter to query documents where QTY > 0
@@ -300,23 +279,23 @@ public class MongoDBCalls {
         return c;
     }
 
-    public boolean AddBill(String invoiceno, String CustomerName, Long CustomerID, Long ShipingID, Double TotalTaxable, Double GST, Double NetTotal, Double NetProfit, Date date, Double AmountPaid, String Remark, String Transport) {
+    public boolean AddBill(String invoiceno, String CustomerName, Long CustomerID, String Destination, Long ShipingID, String GSTIN, Double TotalTaxable, Double GST, Double NetTotal, Double NetProfit, Long date, Double AmountPaid, String Remark, String Transport) {
 
         try {
-            MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-            MongoDatabase db = client.getDatabase("Billing");
             MongoCollection col = db.getCollection("Bills");
             // Create a new document to be inserted
             Document document = new Document();
             document.append("InvoiceNo", invoiceno)
                     .append("CustomerName", CustomerName)
                     .append("CustomerDetails", CustomerID)
+                    .append("GSTIN", GSTIN)
+                    .append("Destination", Destination)
                     .append("ShipingDetails", ShipingID)
                     .append("TaxableAmount", TotalTaxable)
                     .append("GST", GST)
                     .append("NetTotal", NetTotal)
                     .append("NetProfit", NetProfit)
-                    .append("Date", date.toString())
+                    .append("Date", date)
                     .append("AmountPaid", AmountPaid)
                     .append("remark", Remark)
                     .append("Transport", Transport);
@@ -331,10 +310,39 @@ public class MongoDBCalls {
         }
 
     }
+    public boolean AddRBill(String invoiceno, String CustomerName, Long CustomerID, String Destination, Long ShipingID, String GSTIN, Double TotalTaxable, Double GST, Double NetTotal, Double NetProfit, Long date, Double AmountPaid, String Remark, String Transport,String Original_Invoice) {
+
+        try {
+            MongoCollection col = db.getCollection("Bills");
+            // Create a new document to be inserted
+            Document document = new Document();
+            document.append("InvoiceNo", invoiceno)
+                    .append("CustomerName", CustomerName)
+                    .append("CustomerDetails", CustomerID)
+                    .append("GSTIN", GSTIN)
+                    .append("Destination", Destination)
+                    .append("ShipingDetails", ShipingID)
+                    .append("TaxableAmount", TotalTaxable)
+                    .append("GST", GST)
+                    .append("NetTotal", NetTotal)
+                    .append("NetProfit", NetProfit)
+                    .append("Date", date)
+                    .append("AmountPaid", AmountPaid)
+                    .append("remark", Remark)
+                    .append("Transport", Transport)
+                    .append("Original_Invoice", Original_Invoice);
+            // Insert the document into the collection
+            col.insertOne(document);
+
+            return true;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            return false;
+        }
+
+    }
 
     public void updateitemlist(int QTY, Long id) throws Exception {
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        MongoDatabase db = client.getDatabase("Billing");
         MongoCollection col = db.getCollection("Medicins");
         Bson filter = Filters.eq("MedicineId", id);
         Bson update = Updates.inc("QTY", -QTY); // Decrement QTY by the specified value
@@ -346,10 +354,26 @@ public class MongoDBCalls {
             System.out.println("No documents were updated");
         }
     }
+public void updateitemlistforReturnBill(int QTY, String Batch, String Product , String Expire, String Scheme) throws Exception {
+        MongoCollection col = db.getCollection("Medicins");
+       
+        Bson filter = Filters.and(
+                Filters.eq("Product", Product),
+                Filters.eq("Batch", Batch),
+                Filters.eq("Expire", Expire)
+                
+                
+        );
+        Bson update = Updates.inc("QTY", +QTY); // Decrement QTY by the specified value
+        UpdateResult result = col.updateOne(filter, update);
 
+        if (result.getModifiedCount() > 0) {
+            System.out.println("Update successful");
+        } else {
+            System.out.println("No documents were updated");
+        }
+    }
     public ArrayList<String> GetAllMedsName() throws Exception {
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        MongoDatabase db = client.getDatabase("Billing");
         MongoCollection col = db.getCollection("Medicins");
         ArrayList<String> MedsName = new ArrayList<>();
         MongoCursor<Document> cursor = col.find().iterator();
@@ -365,51 +389,46 @@ public class MongoDBCalls {
     }
 
     public ArrayList<String> GetAllCustomer() throws Exception {
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        MongoDatabase db = client.getDatabase("Billing");
         MongoCollection col = db.getCollection("Customer");
         ArrayList<String> CustomersName = new ArrayList<>();
-        MongoCursor<Document> cursor = col.find().iterator();
-        while (cursor.hasNext()) {
-            Document document = cursor.next();
-            String customer = document.getString("Firm_Name");
-            Long CustomerID = document.getLong("CustomerId");
-            CustomersName.add(customer + "=>" + CustomerID);
+        try (MongoCursor<Document> cursor = col.find().iterator()) {
+            while (cursor.hasNext()) {
+                Document document = cursor.next();
+                String customer = document.getString("Firm_Name");
+                Long CustomerID = document.getLong("CustomerId");
+                CustomersName.add(customer + "=>" + CustomerID);
+            }
         }
-        cursor.close();
 
         return CustomersName;
 
     }
 
     public ArrayList<Object[]> GetAllBills(Long id) throws Exception {
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        MongoDatabase db = client.getDatabase("Billing");
         MongoCollection col = db.getCollection("Bills");
         Bson filter = Filters.eq("CustomerDetails", id);
 
         // Execute the find query with the filter
-//        FindIterable<Document> cursor = col.find(filter);
-        ArrayList<Object[]> Bills = new ArrayList<Object[]>();
-        MongoCursor<Document> cursor = col.find(filter).iterator();
-        while (cursor.hasNext()) {
+        ArrayList<Object[]> Bills = new ArrayList<>();
+        try (MongoCursor<Document> cursor = col.find(filter).iterator()) {
+            while (cursor.hasNext()) {
 
-            Document document = cursor.next();
-            String InvoiceNo = document.getString("InvoiceNo");
-            String CustomerName = document.getString("CustomerName");
-            Long CustomerDetails = document.getLong("CustomerDetails");
-            Double TaxableAmount = document.getDouble("TaxableAmount");
-            Double GST = document.getDouble("GST");
-            Double NetTotal = document.getDouble("NetTotal");
-            Double NetProfit = document.getDouble("NetProfit");
-            String Date = document.getString("Date");
-            Double AmountPaid = document.getDouble("AmountPaid");
-            String remark = document.getString("remark");
+                Document document = cursor.next();
+                String InvoiceNo = document.getString("InvoiceNo");
+                String CustomerName = document.getString("CustomerName");
+                Long CustomerDetails = document.getLong("CustomerDetails");
+                Double TaxableAmount = document.getDouble("TaxableAmount");
+                Double GST = document.getDouble("GST");
+                Double NetTotal = document.getDouble("NetTotal");
+                Double NetProfit = document.getDouble("NetProfit");
+                Long Date = document.getLong("Date");
+                Double AmountPaid = document.getDouble("AmountPaid");
+                String remark = document.getString("remark");
 
-            Object oneBill[] = {Date, InvoiceNo, CustomerName, CustomerDetails, TaxableAmount, GST, NetTotal, NetProfit, AmountPaid, remark};
-            Bills.add(oneBill);
+                Object oneBill[] = {Date, InvoiceNo, CustomerName, CustomerDetails, TaxableAmount, GST, NetTotal, NetProfit, AmountPaid, remark};
+                Bills.add(oneBill);
+            }
         }
-        cursor.close();
 
         return Bills;
 
@@ -417,8 +436,6 @@ public class MongoDBCalls {
 
     public ArrayList<Double> GetSalesDetails(Date start, Date End) throws Exception {
         ArrayList<Double> SalesDetails = new ArrayList<>();
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        MongoDatabase db = client.getDatabase("Billing");
         MongoCollection col = db.getCollection("Bills");
         // Construct filter for Date range
         Bson filter = Filters.and(
@@ -451,100 +468,97 @@ public class MongoDBCalls {
     }
 
     public ArrayList<Object> getbillDetails(String InvoiceNo) {
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        MongoDatabase db = client.getDatabase("Billing");
         MongoCollection col = db.getCollection("Bills");
         Bson filter = Filters.eq("InvoiceNo", InvoiceNo);
         ArrayList<Object> Customers = new ArrayList<>();
-        MongoCursor<Document> cursor = col.find(filter).iterator();
-        while (cursor.hasNext()) {
-            Document document = cursor.next();
-            String customer = document.getString("CustomerName");
-            Long BillingCustomerID = document.getLong("CustomerDetails");
-            Long ShippingCustomerID = document.getLong("ShipingDetails");
-            Double TaxableAmount = document.getDouble("TaxableAmount");
-            Double GST = document.getDouble("GST");
-            Double NetTotal = document.getDouble("NetTotal");
-            Double AmountPaid = document.getDouble("AmountPaid");
-            String Remark = document.getString("remark");
-            String Date = document.getString("Date");
-            String Transport = document.getString("Transport");
-            Customers.add(customer);
-            Customers.add(BillingCustomerID);
-            Customers.add(ShippingCustomerID);
-            Customers.add(TaxableAmount);
-            Customers.add(GST);
-            Customers.add(NetTotal);
-            Customers.add(AmountPaid);
-            Customers.add(Remark);
-            Customers.add(Date);
-            Customers.add(Transport);
+        try (MongoCursor<Document> cursor = col.find(filter).iterator()) {
+            while (cursor.hasNext()) {
+                Document document = cursor.next();
+                String customer = document.getString("CustomerName");
+                Long BillingCustomerID = document.getLong("CustomerDetails");
+                Long ShippingCustomerID = document.getLong("ShipingDetails");
+                Double TaxableAmount = document.getDouble("TaxableAmount");
+                Double GST = document.getDouble("GST");
+                Double NetTotal = document.getDouble("NetTotal");
+                Double AmountPaid = document.getDouble("AmountPaid");
+                String Remark = document.getString("remark");
+                Long Date = document.getLong("Date");
+                String Transport = document.getString("Transport");
+                String Destination = document.getString("Destination");
+                String GSTIN=document.getString("GSTIN");
+                Customers.add(customer);
+                Customers.add(BillingCustomerID);
+                Customers.add(ShippingCustomerID);
+                Customers.add(TaxableAmount);
+                Customers.add(GST);
+                Customers.add(NetTotal);
+                Customers.add(AmountPaid);
+                Customers.add(Remark);
+                Customers.add(Date);
+                Customers.add(Transport);
+                Customers.add(Destination);
+                Customers.add(GSTIN);
 
+            }
         }
-        cursor.close();
         return Customers;
     }
 
     public ArrayList<BilledMeds> getBilledMeds(String InvoiceNo) {
-        MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        MongoDatabase db = client.getDatabase("Billing");
         MongoCollection col = db.getCollection("Sold_Medicines");
         Bson filter = Filters.eq("Invoice", InvoiceNo);
 
         // Execute the find query with the filter
 //        FindIterable<Document> cursor = col.find(filter);
-        ArrayList<BilledMeds> Meds = new ArrayList<BilledMeds>();
-        MongoCursor<Document> cursor = col.find(filter).iterator();
-        while (cursor.hasNext()) {
+        ArrayList<BilledMeds> Meds = new ArrayList<>();
+        try (MongoCursor<Document> cursor = col.find(filter).iterator()) {
+            while (cursor.hasNext()) {
 
-            Document document = cursor.next();
+                Document document = cursor.next();
 
-            String product = document.getString("Med");
-            Double MRP = document.getDouble("MRP");
-            String HSN = document.getString("HSN");
-            String Batch = document.getString("Batch");
-            String Pack = document.getString("Pack");
-            int QTY = document.getInteger("QTY");
-            String Scheme = document.getString("Scheme");
-            Double PTR = document.getDouble("PTR");
-            int NetQTY = document.getInteger("NetQTY");
-            String Expire = document.getString("Expire");
-            Double PTS = document.getDouble("PTS");
-            Double Discount = document.getDouble("Discount");
-            Double TaxableAmount = document.getDouble("TaxableAmount");
-            Double GSTpercentage = document.getDouble("GST");
-            Double GST = document.getDouble("GST");
-            Double NetTotal = document.getDouble("NetTotal");
-            BilledMeds med = new BilledMeds(0l, HSN, Batch, product, Pack, MRP, QTY, Scheme, NetQTY, Expire, PTS, PTR, Discount, TaxableAmount,GSTpercentage, GST, NetTotal, 0.0);
-            Meds.add(med);
+                String product = document.getString("Med");
+                Double MRP = document.getDouble("MRP");
+                String HSN = document.getString("HSN");
+                String Batch = document.getString("Batch");
+                String Pack = document.getString("Pack");
+                int QTY = document.getInteger("QTY");
+                String Scheme = document.getString("Scheme");
+                Double PTR = document.getDouble("PTR");
+                int NetQTY = document.getInteger("NetQTY");
+                String Expire = document.getString("Expire");
+                Double PTS = document.getDouble("PTS");
+                Double Discount = document.getDouble("Discount");
+                Double TaxableAmount = document.getDouble("TaxableAmount");
+                Double GSTpercentage = document.getDouble("GSTpercentage");
+                Double GST = document.getDouble("GST");
+                Double NetTotal = document.getDouble("NetTotal");
+                Double Profit=document.getDouble("Profit");
+                BilledMeds med = new BilledMeds(0l, HSN, Batch, product, Pack, MRP, QTY, Scheme, NetQTY, Expire, PTS, PTR, Discount, TaxableAmount, GSTpercentage, GST, NetTotal, Profit);
+                Meds.add(med);
+            }
         }
-        cursor.close();
 
         return Meds;
 
     }
-    
-    public Integer getInvoiceCounter(){
-     MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        MongoDatabase db = client.getDatabase("Billing");
+
+    public Integer getInvoiceCounter() {
         MongoCollection col = db.getCollection("counters");
-         Bson filter = Filters.exists("invoice");
-         MongoCursor<Document> cursor = col.find(filter).iterator();
-         Integer InvoiceNo=0;
-      while (cursor.hasNext()) {
+        Bson filter = Filters.exists("invoice");
+        MongoCursor<Document> cursor = col.find(filter).iterator();
+        Integer InvoiceNo = 0;
+        while (cursor.hasNext()) {
 
             Document document = cursor.next();
-             InvoiceNo= document.getInteger("invoice");
+            InvoiceNo = document.getInteger("invoice");
+        }
+        return InvoiceNo;
     }
-      return InvoiceNo;
-}
-    
-    public void updateInvoiceCounter(Integer inv){
-    MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-        MongoDatabase db = client.getDatabase("Billing");
+
+    public void updateInvoiceCounter(Integer inv) {
         MongoCollection col = db.getCollection("counters");
         Bson filter = Filters.eq("invoice", inv);
-        Bson update = Updates.inc("invoice", +1); 
+        Bson update = Updates.inc("invoice", +1);
         UpdateResult result = col.updateOne(filter, update);
 
         if (result.getModifiedCount() > 0) {
@@ -553,4 +567,138 @@ public class MongoDBCalls {
             System.out.println("No documents were updated");
         }
     }
+
+    public boolean insertSeller(String Name, String Address, String Phone_No, String Branch, String State) {
+        try {
+            MongoCollection col = db.getCollection("Seller");
+            // Create a document to insert
+            Document doc = new Document("Seller_Name", Name)
+                    .append("Address", Address)
+                    .append("Phone_No", Phone_No)
+                    .append("Branch", Branch)
+                    .append("State", State);
+            col.insertOne(doc);
+            return true;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            return false;
+        }
+    }
+
+    public ArrayList<String> getAllSellers() {
+        MongoCollection col = db.getCollection("Seller");
+        ArrayList<String> SellerName = new ArrayList<>();
+        try (MongoCursor<Document> cursor = col.find().iterator()) {
+            while (cursor.hasNext()) {
+                Document document = cursor.next();
+                String Seller_Name = document.getString("Seller_Name");
+                String Branch = document.getString("Branch");
+                SellerName.add(Seller_Name + " => " + Branch);
+            }
+        }
+
+        return SellerName;
+    }
+
+    public boolean insertPurcheseItem(Med med, String Seller, String InvoiceNo, String date, String GST, String IGST, String Total) {
+        try {
+            MongoCollection col = db.getCollection("purchases");
+
+            // Create a document to insert
+            Document doc = new Document("HSNCode", med.getHSNCode())
+                    .append("Product", med.getProduct())
+                    .append("Pack", med.getPack())
+                    .append("Batch", med.getBatch())
+                    .append("Expire", med.getExpire())
+                    .append("GST", med.getGST())
+                    .append("QTY", med.getQTY())
+                    .append("Scheme", med.getScheme())
+                    .append("PTS", med.getPTS())
+                    .append("PTR", med.getPTR())
+                    .append("Rate", med.getRate())
+                    .append("MRP", med.getMRP())
+                    .append("Seller", Seller)
+                    .append("InvoiceNo", InvoiceNo)
+                    .append("date", date)
+                    .append("GST", GST)
+                    .append("IGST", IGST)
+                    .append("Total", Total);
+
+            // Insert the document into the collection
+            col.insertOne(doc);
+
+            // Close the MongoDB connection
+            return true;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            return false;
+        }
+    }
+
+    public ArrayList<GSTR1Model> SoldMedicinesDataforGST(Long start, Long end) {
+        MongoCollection col = db.getCollection("Sold_Medicines");
+        Bson filter = Filters.and(
+                Filters.gte("Date", start),
+                Filters.lte("Date", end)
+        );
+
+        // Execute the find query with the filter
+//        FindIterable<Document> cursor = col.find(filter);
+        ArrayList<GSTR1Model> soldmed = new ArrayList<>();
+        MongoCursor<Document> cursor = col.find(filter).iterator();
+        while (cursor.hasNext()) {
+
+            Document document = cursor.next();
+            String InvoiceNo = document.getString("Invoice");
+            String HSN = document.getString("HSN");
+
+            int NetQTY = document.getInteger("NetQTY");
+
+            Double TaxableAmount = document.getDouble("TaxableAmount");
+            Double GSTpercentage = document.getDouble("GSTpercentage");
+            Double GST = document.getDouble("GST");
+            Double NetTotal = document.getDouble("NetTotal");
+            Long date = document.getLong("Date");
+            String TransactionType = "Return";
+            if (TaxableAmount > 0) {
+                TransactionType = "Sales";
+            }
+            GSTR1Model one = new GSTR1Model(InvoiceNo, date, "", "", "", TransactionType, HSN, NetQTY, TaxableAmount, GSTpercentage, GST, NetTotal,"");
+            soldmed.add(one);
+        }
+        cursor.close();
+
+        return soldmed;
+    }
+
+    public ArrayList<GSTR1Model> BillsDataforGST(Long start, Long end) {
+        MongoCollection col = db.getCollection("Bills");
+        Bson filter = Filters.and(
+                Filters.gte("Date", start),
+                Filters.lte("Date", end)
+        );
+
+        ArrayList<GSTR1Model> soldmed = new ArrayList<>();
+        MongoCursor<Document> cursor = col.find(filter).iterator();
+        while (cursor.hasNext()) {
+
+            Document document = cursor.next();
+            String InvoiceNo = document.getString("InvoiceNo");
+            String CustomerName = document.getString("CustomerName");
+            String Destination = document.getString("Destination");
+            String GSTIN = document.getString("GSTIN");
+            String Nature= "B2B";
+            if(GSTIN ==null || GSTIN.length()==0)
+            {
+            Nature= "B2C";
+            }
+
+            GSTR1Model one = new GSTR1Model(InvoiceNo, 0l, CustomerName, GSTIN, Nature, "", "", 0, 0.0, 0.0, 0.0, 0.0,Destination);
+            soldmed.add(one);
+        }
+        cursor.close();
+
+        return soldmed;
+    }
+
 }

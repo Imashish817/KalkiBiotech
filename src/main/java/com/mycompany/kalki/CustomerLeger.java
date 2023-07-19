@@ -290,7 +290,7 @@ ArrayList<Object[]> Filteredbills = new ArrayList<>();
                     model.setRowCount(0);
                     ArrayList<Object[]> bills = new ArrayList<>();
                     System.out.println(jDateChooser1.getDate());
-                    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
 
                     if (jDateChooser1.getDate() == null) {
 
@@ -312,12 +312,13 @@ ArrayList<Object[]> Filteredbills = new ArrayList<>();
 
                     for (int i = 0; i < bills.size(); i++) {
 
-                        java.util.Date date = sdf1.parse(bills.get(i)[0].toString());
+                        java.util.Date date = new Date(Long.valueOf(bills.get(i)[0].toString()));
                         java.sql.Date d = new java.sql.Date(date.getTime());
 
                         if ((d.after(start) || d.equals(start)) && (d.before(End) || d.equals(End))) {
                             System.out.println(d);
                             Filteredbills.add(bills.get(i));
+                          bills.get(i)[0]= sdf1.format(bills.get(i)[0]) ;
                             model.addRow(bills.get(i));
                             System.out.println(bills.get(i)[1]);
                             TotalTaxable = TotalTaxable + Double.parseDouble(bills.get(i)[4].toString());

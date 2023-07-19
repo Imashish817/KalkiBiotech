@@ -28,6 +28,55 @@ public class BilledMeds {
     Double GST;
     Double NetTotal;
     Double Profit;
+    //for return
+    int RQty;
+    Double ReturnRate;
+    Double NewGSTAmount;
+    Double ProfitDecline;
+
+    public BilledMeds(String HSNCode, String Batch, String Product, String Pack, Double MRP, String Scheme, int NetQTY, String Expire, Double PTS, Double PTR, Double TaxableAmount, Double GSTPercentage, Double GST, int RQty, Double ReturnRate,Double NewGSTAmount,Double ProfitDecline) {
+        this.HSNCode = HSNCode;
+        this.Batch = Batch;
+        this.Product = Product;
+        this.Pack = Pack;
+        this.MRP = MRP;
+        this.Scheme = Scheme;
+        this.NetQTY = NetQTY;
+        this.Expire = Expire;
+        this.PTS = PTS;
+        this.PTR = PTR;
+        this.TaxableAmount = TaxableAmount;
+        this.GSTPercentage = GSTPercentage;
+        this.GST = GST;
+        this.RQty = RQty;
+        this.ReturnRate=ReturnRate;
+        this.NewGSTAmount=NewGSTAmount;
+        this.ProfitDecline=ProfitDecline;
+    }
+
+    public Double getProfitDecline() {
+        return ProfitDecline;
+    }
+
+    public void setProfitDecline(Double ProfitDecline) {
+        this.ProfitDecline = ProfitDecline;
+    }
+
+    public Double getNewGSTAmount() {
+        return NewGSTAmount;
+    }
+
+    public void setNewGSTAmount(Double NewGSTAmount) {
+        this.NewGSTAmount = NewGSTAmount;
+    }
+
+    public Double getReturnRate() {
+        return ReturnRate;
+    }
+
+    public void setReturnRate(Double ReturnRate) {
+        this.ReturnRate = ReturnRate;
+    }
 
     public Long getId() {
         return id;
@@ -35,6 +84,14 @@ public class BilledMeds {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getRQty() {
+        return RQty;
+    }
+
+    public void setRQty(int RQty) {
+        this.RQty = RQty;
     }
 
     

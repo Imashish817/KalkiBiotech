@@ -22,7 +22,7 @@ public class Med {
     Double PTS;
     Double PTR;
     Double Rate;
-    Double GSTpercentage;
+    
     Double MRP;
 
     public Med() {
@@ -40,7 +40,7 @@ public class Med {
 
     
 
-    public Med(Long ID,String HSNCode, String Product, String Pack, String Batch, String Expire, int GST, int QTY, String Scheme, Double PTS, Double PTR, Double Rate, Double GSTpercentage, Double MRP) {
+    public Med(Long ID,String HSNCode, String Product, String Pack, String Batch, String Expire, int GST, int QTY, String Scheme, Double PTS, Double PTR, Double Rate, Double MRP) {
        this.ID=ID;
         this.HSNCode = HSNCode;
         this.Product = Product;
@@ -53,17 +53,11 @@ public class Med {
         this.PTS = PTS;
         this.PTR = PTR;
         this.Rate = Rate;
-        this.GSTpercentage= GSTpercentage;
+        
         this.MRP = MRP;
     }
 
-    public Double getGSTpercentage() {
-        return GSTpercentage;
-    }
-
-    public void setGSTpercentage(Double GSTpercentage) {
-        this.GSTpercentage = GSTpercentage;
-    }
+   
 
     public String getHSNCode() {
         return HSNCode;

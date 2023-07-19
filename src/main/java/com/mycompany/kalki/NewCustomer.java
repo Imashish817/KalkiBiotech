@@ -7,6 +7,7 @@ package com.mycompany.kalki;
 
 import com.mycompany.kalki.DBCalls.GetDBData;
 import com.mycompany.kalki.DBCalls.MongoDBCalls;
+import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -57,7 +58,7 @@ public class NewCustomer extends javax.swing.JFrame {
         jTextField9 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
-        jTextField10 = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel12 = new javax.swing.JLabel();
 
@@ -202,17 +203,21 @@ public class NewCustomer extends javax.swing.JFrame {
         jPanel1.add(jLabel10);
         jLabel10.setBounds(120, 430, 85, 26);
 
-        jTextField10.setBackground(new java.awt.Color(5, 15, 25));
-        jTextField10.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jTextField10.setForeground(new java.awt.Color(255, 255, 255));
-        jPanel1.add(jTextField10);
-        jTextField10.setBounds(220, 430, 156, 31);
+        jComboBox1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "09-Uttar Pradesh", "01-Jammu & Kashmir", "02-Himachal Pradesh", "03-Punjab", "04-Chandigarh", "05-Uttarakhand", "06-Haryana", "07-Delhi", "08-Rajasthan", "10-Bihar", "11-Sikkim", "12-Arunachal Pradesh", "13-Nagaland", "14-Manipur", "15-Mizoram", "16-Tripura", "17-Meghalaya", "18-Assam", "19-West Bengal", "20-Jharkhand", "21-Odisha", "22-Chhattisgarh", "23-Madhya Pradesh", "24-Gujarat", "25-Daman & Diu", "26-Dadra & Nagar Haveli & Daman & Diu", "27-Maharashtra", "29-Karnataka", "30-Goa", "31-Lakshdweep", "32-Kerala", "33-Tamil Nadu", "34-Puducherry", "35-Andaman & Nicobar Islands", "36-Telangana", "37-Andhra Pradesh", "38-Ladakh", "97-Other Territory", " " }));
+        jComboBox1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jComboBox1KeyPressed(evt);
+            }
+        });
+        jPanel1.add(jComboBox1);
+        jComboBox1.setBounds(220, 430, 160, 23);
         jPanel1.add(jSeparator1);
         jSeparator1.setBounds(10, 51, 480, 10);
 
         jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3WyW.gif"))); // NOI18N
         jPanel1.add(jLabel12);
-        jLabel12.setBounds(0, 0, 510, 550);
+        jLabel12.setBounds(10, 20, 510, 550);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -250,7 +255,7 @@ public class NewCustomer extends javax.swing.JFrame {
         jTextField7.setVisible(b);
         jTextField8.setVisible(b);
         jTextField9.setVisible(b);
-        jTextField10.setVisible(b);
+        jComboBox1.setVisible(b);
         
         jSeparator1.setVisible(b);
         jButton1.setVisible(b);
@@ -279,9 +284,9 @@ public class NewCustomer extends javax.swing.JFrame {
                 String PAN = jTextField7.getText();
                 String DL1 = jTextField8.getText();
                 String DL2 = jTextField9.getText();
-                String State = jTextField10.getText();
+                String State = jComboBox1.getSelectedItem().toString();
 
-                if (Firm_Name.isEmpty() || Address.isEmpty() || Mobile.isEmpty() || tel.isEmpty() || email.isEmpty() || GSTno.isEmpty() || PAN.isEmpty() || DL1.isEmpty() || DL2.isEmpty() || State.isEmpty()) {
+                if (Firm_Name.isEmpty() || GSTno.isEmpty()  || State.isEmpty()) {
                     JOptionPane.showMessageDialog(rootPane, "Please \n Enter All Details...");
                 } else {
                     MongoDBCalls dbcall = new MongoDBCalls();
@@ -308,6 +313,10 @@ public class NewCustomer extends javax.swing.JFrame {
 //        Boolean b=DB.AddCustomer(customer);
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jComboBox1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jComboBox1KeyPressed
+        
+    }//GEN-LAST:event_jComboBox1KeyPressed
 
     /**
      * @param args the command line arguments
@@ -346,6 +355,7 @@ public class NewCustomer extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -361,7 +371,6 @@ public class NewCustomer extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField10;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;

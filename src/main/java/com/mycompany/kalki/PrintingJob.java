@@ -18,6 +18,7 @@ public class PrintingJob {
     Customer ShippingDetails;
     String Inv;
     LocalDate Date;
+    ArrayList<Double[]> gstdetails;
     public void setBilledDetails(Customer customer)
     {
         System.out.println(customer.getFirm_Name()+customer.getDL1());
@@ -34,6 +35,10 @@ public class PrintingJob {
         Inv=InvoiceNo;
         Date=date;
     }
+    public void GSTDetails(ArrayList<Double[]> gstdetails)
+    {
+      this.gstdetails=gstdetails;
+    }
     
     
     public void Meds(ArrayList<BilledMeds> medicins,Double GST, Double Taxable,Double NetTotal,String paid,String Remark,String Amountleft,String Transport)
@@ -47,7 +52,7 @@ public class PrintingJob {
         if(medicins.isEmpty())
         {
         //this means its a deposit request
-          Printbills bill=new Printbills(Inv,Date,BillingDetails,ShippingDetails,medicins,GST,Taxable,NetTotal,paid,Remark,Amountleft,false,1,"");  
+          Printbills bill=new Printbills(Inv,Date,BillingDetails,ShippingDetails,medicins,GST,Taxable,NetTotal,paid,Remark,Amountleft,false,1,"",gstdetails);  
           bill.setVisible(true);
         }
         int s=0;
@@ -57,7 +62,7 @@ public class PrintingJob {
         while(s!=medicins.size()){
             System.out.println("in while");
             ArrayList<BilledMeds> submedicins=new ArrayList<>();
-            for (int j = 0; j < 15; j++) {
+            for (int j = 0; j < 9; j++) {
                 
                 if (s + 1 == medicins.size()) {
                     submedicins.add(medicins.get(s));
@@ -68,7 +73,7 @@ public class PrintingJob {
                 submedicins.add(medicins.get(s));
                 s++;
             }
-             Printbills bill=new Printbills(Inv,Date,BillingDetails,ShippingDetails,submedicins,GST,Taxable,NetTotal,paid,Remark,Amountleft,TBC,pageNo, Transport);
+             Printbills bill=new Printbills(Inv,Date,BillingDetails,ShippingDetails,submedicins,GST,Taxable,NetTotal,paid,Remark,Amountleft,TBC,pageNo, Transport,gstdetails);
             bill.setVisible(true);
             pageNo++;
         }

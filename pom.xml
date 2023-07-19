@@ -14,10 +14,19 @@
     <version>1.6.4</version>
 </dependency>
 <dependency>
-	<groupId>com.jtattoo</groupId>
-	<artifactId>JTattoo</artifactId>
-	<version>1.6.10</version>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi</artifactId>
+    <version>5.0.0</version>
 </dependency>
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi-ooxml</artifactId>
+    <version>5.0.0</version>
+</dependency>
+
+
+
+
 <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
 <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
 
@@ -36,7 +45,7 @@
     <artifactId>jcalendar</artifactId>
     <version>1.4</version>
 </dependency>
-
+ 
 <!-- Thanks for using https://jar-download.com -->
 
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-clean-plugin -->
@@ -45,39 +54,20 @@
             <artifactId>maven-clean-plugin</artifactId>
             <version>2.4.1</version>
         </dependency>
-        <dependency>
-  <groupId>com.hynnet</groupId>
-  <artifactId>sqljdbc4-chs</artifactId>
-  <version>4.0.2206.100</version>
-</dependency>
-<!--        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.18</version>
-        </dependency>-->
-     <dependency>
-    <groupId>com.microsoft.sqlserver</groupId>
-    <artifactId>mssql-jdbc</artifactId>
-    <version>11.2.1.jre17</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-<dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <version>8.0.28</version>
-</dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.7</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jdesktop</groupId>
+<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+
+
+<!--              ependency>-->
+<!--            <groupId>org.jdesktop</groupId>
             <artifactId>beansbinding</artifactId>
             <version>1.2.1</version>
-        </dependency>
+        </dependency>--> 
+<!--        <dependency>-->
+<!--            <groupId>org.jdesktop</groupId>
+            <artifactId>beansbinding</artifactId>
+            <version>1.2.1</version>
+        </dependency>-->
         <dependency>
             <groupId>unknown.binary</groupId>
             <artifactId>AbsoluteLayout</artifactId>

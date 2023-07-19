@@ -8,6 +8,7 @@ package com.mycompany.kalki;
 
 import com.mycompany.kalki.DBCalls.MongoDBCalls;
 import com.sun.org.apache.bcel.internal.generic.AALOAD;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -77,11 +78,21 @@ public class Login extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        jButton1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jButton1KeyPressed(evt);
+            }
+        });
         jPanel1.add(jButton1);
         jButton1.setBounds(240, 250, 220, 40);
 
         jPasswordField1.setBackground(new java.awt.Color(5, 15, 25));
         jPasswordField1.setForeground(new java.awt.Color(255, 255, 255));
+        jPasswordField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jPasswordField1KeyPressed(evt);
+            }
+        });
         jPanel1.add(jPasswordField1);
         jPasswordField1.setBounds(240, 190, 220, 40);
 
@@ -116,15 +127,12 @@ private void setall(boolean b) {
         jLabel1.setVisible(b);
         jLabel2.setVisible(b);
     }
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         Thread t = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            setall(false);
-            jLabel3.setVisible(true);
-        }
 
-    });
+public void login(){
+ Thread t = new Thread(() -> {
+             setall(false);
+             jLabel3.setVisible(true);
+         });
           Thread t1 = new Thread(new Runnable() {
         @Override
         public void run() {
@@ -138,25 +146,32 @@ private void setall(boolean b) {
             {
                     Home home=new Home();
                     home.setVisible(true);
+                     setall(true);
+            jLabel3.setVisible(false);
+             dispose();
+
+            new JFrame().setVisible(false);
             }
             else{
                 JOptionPane.showMessageDialog(rootPane, "Worng Details");
+                jPasswordField1.setText("");
+                setall(true);
+                 jLabel3.setVisible(false);
             }
         } catch (Exception ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
              
-            setall(true);
-            jLabel3.setVisible(false);
-             dispose();
-
-            new JFrame().setVisible(false);
+           
         }
 
     });
           t.start();
           t1.start();
        
+}
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        login();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseEntered
@@ -168,6 +183,20 @@ private void setall(boolean b) {
          jButton1.setBackground(new java.awt.Color(255, 152, 63));
           jButton1.setFont(new java.awt.Font("Arial", 0, 14));
     }//GEN-LAST:event_jButton1MouseExited
+
+    private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
+         if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+             login();
+           
+       } 
+    }//GEN-LAST:event_jPasswordField1KeyPressed
+
+    private void jButton1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+             login();
+           
+       } 
+    }//GEN-LAST:event_jButton1KeyPressed
 
     /**
      * @param args the command line arguments
