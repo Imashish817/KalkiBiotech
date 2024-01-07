@@ -26,6 +26,7 @@ import com.mongodb.client.result.UpdateResult;
 import com.mycompany.kalki.Customer;
 import com.mycompany.kalki.GSTR1Model;
 import com.mycompany.kalki.Med;
+import java.text.DecimalFormat;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import java.util.Arrays;
@@ -417,12 +418,12 @@ public void updateitemlistforReturnBill(int QTY, String Batch, String Product , 
                 String InvoiceNo = document.getString("InvoiceNo");
                 String CustomerName = document.getString("CustomerName");
                 Long CustomerDetails = document.getLong("CustomerDetails");
-                Double TaxableAmount = document.getDouble("TaxableAmount");
-                Double GST = document.getDouble("GST");
-                Double NetTotal = document.getDouble("NetTotal");
-                Double NetProfit = document.getDouble("NetProfit");
+                Double TaxableAmount =  Math.round(document.getDouble("TaxableAmount") * 100) / 100.0;
+                Double GST = Math.round(document.getDouble("GST") * 100) / 100.0;
+                Double NetTotal = Math.round(document.getDouble("NetTotal") * 100) / 100.0;
+                Double NetProfit = Math.round(document.getDouble("NetProfit") * 100) / 100.0;
                 Long Date = document.getLong("Date");
-                Double AmountPaid = document.getDouble("AmountPaid");
+                Double AmountPaid = Math.round(document.getDouble("AmountPaid") * 100) / 100.0;
                 String remark = document.getString("remark");
 
                 Object oneBill[] = {Date, InvoiceNo, CustomerName, CustomerDetails, TaxableAmount, GST, NetTotal, NetProfit, AmountPaid, remark};
@@ -434,12 +435,12 @@ public void updateitemlistforReturnBill(int QTY, String Batch, String Product , 
 
     }
 
-    public ArrayList<Double> GetSalesDetails(Date start, Date End) throws Exception {
+    public ArrayList<Double> GetSalesDetails(long start, long End) throws Exception {
         ArrayList<Double> SalesDetails = new ArrayList<>();
         MongoCollection col = db.getCollection("Bills");
         // Construct filter for Date range
         Bson filter = Filters.and(
-                Filters.gte("Date", start),
+                 Filters.gte("Date", start),
                 Filters.lte("Date", End)
         );
 

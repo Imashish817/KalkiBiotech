@@ -508,6 +508,8 @@ jLabel14.setVisible(false);
         jLabel12.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jPanel3.add(jLabel12);
         jLabel12.setBounds(90, 70, 130, 30);
+
+        jDateChooser1.setDateFormatString("dd/MM/yyyy");
         jPanel3.add(jDateChooser1);
         jDateChooser1.setBounds(610, 110, 190, 30);
 

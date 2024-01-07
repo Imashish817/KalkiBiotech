@@ -7,6 +7,7 @@ package com.mycompany.kalki;
 
 import com.mycompany.kalki.DBCalls.MongoDBCalls;
 import java.sql.Date;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -78,7 +79,6 @@ public class CustomerLeger extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Kalki Biotech || Ledger");
         setBackground(new java.awt.Color(5, 15, 25));
         getContentPane().setLayout(null);
@@ -105,6 +105,7 @@ public class CustomerLeger extends javax.swing.JFrame {
 
         jDateChooser1.setBackground(new java.awt.Color(5, 15, 25));
         jDateChooser1.setForeground(new java.awt.Color(255, 255, 255));
+        jDateChooser1.setDateFormatString("dd/MM/yyyy");
         jDateChooser1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jPanel1.add(jDateChooser1);
         jDateChooser1.setBounds(240, 70, 210, 32);
@@ -117,6 +118,7 @@ public class CustomerLeger extends javax.swing.JFrame {
 
         jDateChooser2.setBackground(new java.awt.Color(5, 15, 25));
         jDateChooser2.setForeground(new java.awt.Color(255, 255, 255));
+        jDateChooser2.setDateFormatString("dd/MM/yyyy");
         jDateChooser2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jPanel1.add(jDateChooser2);
         jDateChooser2.setBounds(590, 70, 213, 32);
@@ -272,6 +274,7 @@ ArrayList<Object[]> Filteredbills = new ArrayList<>();
         jSeparator3.setVisible(b);
         jSeparator4.setVisible(b);
     }
+    DecimalFormat df = new DecimalFormat("0.00");
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Thread t = new Thread(new Runnable() {
             @Override
@@ -286,6 +289,11 @@ ArrayList<Object[]> Filteredbills = new ArrayList<>();
             @Override
             public void run() {
                 try {
+                     TotalTaxable = 0.0;
+     TotalGST = 0.0;
+     GrandTotal = 0.0;
+     Amount_Paid = 0.0;
+     Amount_Left = 0.0;
                     DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
                     model.setRowCount(0);
                     ArrayList<Object[]> bills = new ArrayList<>();
@@ -308,6 +316,8 @@ ArrayList<Object[]> Filteredbills = new ArrayList<>();
 
                     System.out.println(End + "   " + start);
                     C_id = Long.valueOf(jComboBox1.getSelectedItem().toString().split("=>")[1]);
+                    bills.clear();
+                    Filteredbills.clear();
                     bills = dbCalls.GetAllBills(C_id);
 
                     for (int i = 0; i < bills.size(); i++) {
@@ -330,10 +340,10 @@ ArrayList<Object[]> Filteredbills = new ArrayList<>();
                     if (model.getRowCount() == 0) {
                         JOptionPane.showMessageDialog(rootPane, "No bills Found ....");
                     }
-                    jLabel45.setText(TotalTaxable.toString());
-                    jLabel47.setText(TotalGST.toString());
-                    jLabel48.setText(GrandTotal.toString());
-                    jLabel52.setText(Amount_Paid.toString());
+                    jLabel45.setText(df.format(TotalTaxable));
+                    jLabel47.setText(df.format(TotalGST));
+                    jLabel48.setText(df.format(GrandTotal));
+                    jLabel52.setText(df.format(Amount_Paid));
                     Amount_Left = GrandTotal - Amount_Paid;
                     jLabel51.setText(Amount_Left.toString());
 

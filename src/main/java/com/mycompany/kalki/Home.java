@@ -23,7 +23,7 @@ public class Home extends javax.swing.JFrame {
     public Home() {
         initComponents();
         setResizable(false);
-        this.setSize(1070, 620);
+        this.setSize(1111, 720);
         jLabel3.setVisible(false);
     }
 
@@ -73,7 +73,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton1);
-        jButton1.setBounds(200, 140, 190, 100);
+        jButton1.setBounds(220, 150, 190, 100);
 
         jButton2.setBackground(new java.awt.Color(255, 152, 63));
         jButton2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -94,7 +94,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton2);
-        jButton2.setBounds(440, 140, 180, 100);
+        jButton2.setBounds(460, 150, 180, 100);
 
         jButton3.setBackground(new java.awt.Color(255, 152, 63));
         jButton3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -115,7 +115,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton3);
-        jButton3.setBounds(670, 140, 180, 100);
+        jButton3.setBounds(690, 150, 180, 100);
 
         jButton4.setBackground(new java.awt.Color(255, 152, 63));
         jButton4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -136,7 +136,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton4);
-        jButton4.setBounds(200, 290, 190, 100);
+        jButton4.setBounds(220, 300, 190, 100);
 
         jButton5.setBackground(new java.awt.Color(255, 152, 63));
         jButton5.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -157,7 +157,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton5);
-        jButton5.setBounds(440, 290, 180, 100);
+        jButton5.setBounds(460, 300, 180, 100);
 
         jButton6.setBackground(new java.awt.Color(255, 152, 63));
         jButton6.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -178,7 +178,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton6);
-        jButton6.setBounds(670, 290, 180, 100);
+        jButton6.setBounds(690, 300, 180, 100);
 
         jButton7.setBackground(new java.awt.Color(255, 152, 63));
         jButton7.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -199,21 +199,21 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton7);
-        jButton7.setBounds(200, 440, 190, 100);
+        jButton7.setBounds(220, 450, 190, 100);
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("KalKi Biotech");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(0, 30, 1070, 43);
+        jLabel1.setBounds(0, 30, 1090, 50);
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3WyW.gif"))); // NOI18N
         jPanel1.add(jLabel3);
-        jLabel3.setBounds(270, 30, 800, 580);
+        jLabel3.setBounds(300, 30, 830, 580);
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 0, 1070, 620);
+        jPanel1.setBounds(0, 0, 1160, 700);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

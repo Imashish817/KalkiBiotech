@@ -36,7 +36,11 @@ public class MedicineLeger extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jDateChooser1.setDateFormatString("dd/MM/yyyy");
+
         jLabel1.setText("Start : ");
+
+        jDateChooser2.setDateFormatString("dd/MM/yyyy");
 
         jLabel2.setText("End : ");
 
