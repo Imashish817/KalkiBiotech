@@ -5,8 +5,8 @@
  */
 package com.mycompany.kalki.DBCalls;
 
-import com.mycompany.kalki.BilledMeds;
-import com.mycompany.kalki.Customer;
+import com.mycompany.kalki.Models.BilledMeds;
+import com.mycompany.kalki.Models.Customer;
 import com.mycompany.kalki.Med;
 import java.sql.Connection;
 import java.sql.Date;

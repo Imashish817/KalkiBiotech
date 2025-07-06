@@ -5,6 +5,7 @@
  */
 package com.mycompany.kalki;
 
+import com.mycompany.kalki.Models.Customer;
 import com.mycompany.kalki.DBCalls.GetDBData;
 import com.mycompany.kalki.DBCalls.MongoDBCalls;
 import java.awt.event.KeyEvent;
@@ -63,6 +64,7 @@ public class NewCustomer extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Add New Customer");
 
         jPanel1.setBackground(new java.awt.Color(5, 15, 25));
         jPanel1.setForeground(new java.awt.Color(5, 15, 25));
@@ -73,7 +75,7 @@ public class NewCustomer extends javax.swing.JFrame {
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setText("Add New Customer");
         jPanel1.add(jLabel11);
-        jLabel11.setBounds(10, 11, 480, 29);
+        jLabel11.setBounds(10, 11, 480, 28);
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));

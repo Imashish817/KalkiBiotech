@@ -54,12 +54,12 @@ public class GSTMenu extends javax.swing.JFrame {
         jLabel2.setVisible(false);
     }
     MongoDBCalls DBCalls = new MongoDBCalls();
-    ArrayList<GSTR1Model> soldmed = new ArrayList<GSTR1Model>();
+    ArrayList<GSTR1Model> soldmed = new ArrayList<>();
     String GSTR1File = "GSTR1.xlsx";
-    String GSTR1FileLocation = "C:/Kalki/" + GSTR1File;
+    String GSTR1FileLocation = Utility.FileLocation + GSTR1File;
 
     String SalesFile = "SalesRecord.xlsx";
-    String SalesFileLocation = "C:/Kalki/" + SalesFile;
+    String SalesFileLocation = Utility.FileLocation + SalesFile;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -82,6 +82,7 @@ public class GSTMenu extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Records");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Start"));
 
@@ -235,7 +236,7 @@ SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
         Double TotalReturnIGST = 0.0;
         Double TotalReturnQTY = 0.0;
         for (int i = 0; i < soldmed.size(); i++) {
-            if (soldmed.get(i).getNature().equals("B2B") && soldmed.get(i).getGSTrate() > 0 && !soldmed.get(i).getInvoiceNo().contains("/KB/R/")) {
+            if (soldmed.get(i).getNature().equals("B2B") && soldmed.get(i).getGSTrate() > 0 && !soldmed.get(i).getInvoiceNo().contains(Utility.RSep)) {
                 TotalB2BAmount = TotalB2BAmount + soldmed.get(i).getInvoiceAmount();
                 TotalB2BTaxableAmount = TotalB2BTaxableAmount + soldmed.get(i).getTaxableAmount();
                 TotalB2BQTY = TotalB2BQTY + soldmed.get(i).getQTY();
@@ -271,7 +272,7 @@ SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
                 }
                 B2BData.add(Data);
             }
-            if (soldmed.get(i).getNature().equals("B2B") && soldmed.get(i).getInvoiceNo().contains("/KB/R/")) {
+            if (soldmed.get(i).getNature().equals("B2B") && soldmed.get(i).getInvoiceNo().contains(Utility.RSep)) {
                 TotalReturnAmount = TotalReturnAmount + soldmed.get(i).getInvoiceAmount();
                 TotalReturnTaxableAmount = TotalReturnTaxableAmount + soldmed.get(i).getTaxableAmount();
                 TotalReturnQTY = TotalReturnQTY + soldmed.get(i).getQTY();

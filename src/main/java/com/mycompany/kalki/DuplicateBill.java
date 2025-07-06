@@ -5,6 +5,8 @@
  */
 package com.mycompany.kalki;
 
+import com.mycompany.kalki.Models.Customer;
+import com.mycompany.kalki.Models.BilledMeds;
 import com.mycompany.kalki.DBCalls.MongoDBCalls;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -44,6 +46,7 @@ public class DuplicateBill extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Duplicate Bill");
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel1.setText("Enter The Bill No: ");

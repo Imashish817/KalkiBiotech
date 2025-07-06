@@ -5,6 +5,7 @@
  */
 package com.mycompany.kalki;
 
+import com.mycompany.kalki.Models.Customer;
 import com.mycompany.kalki.DBCalls.MongoDBCalls;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -49,7 +50,7 @@ public class pCustomerLeger extends javax.swing.JFrame {
 
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         for (int i = 0; i < Filteredbills.size(); i++) {
-            Object [] row={Filteredbills.get(i)[0],Filteredbills.get(i)[1],Filteredbills.get(i)[4],Filteredbills.get(i)[5],Filteredbills.get(i)[6],Filteredbills.get(i)[8],Filteredbills.get(i)[9]};
+            Object[] row = {Filteredbills.get(i)[0], Filteredbills.get(i)[1], Filteredbills.get(i)[4], Filteredbills.get(i)[5], Filteredbills.get(i)[6], Filteredbills.get(i)[8], Filteredbills.get(i)[9]};
             model.addRow(row);
         }
         DecimalFormat df = new DecimalFormat("0.00");
@@ -59,6 +60,16 @@ public class pCustomerLeger extends javax.swing.JFrame {
         jLabel52.setText(df.format(Amount_Paid));
         jLabel51.setText(df.format(Amount_Left));
 
+        jLabel1.setText(MongoDBCalls.getIAM().getCustomrName().toUpperCase());
+        jLabel2.setText(MongoDBCalls.getIAM().getAddress1());
+        jLabel3.setText(MongoDBCalls.getIAM().getAddress2());
+        jLabel4.setText( jLabel4.getText() + MongoDBCalls.getIAM().getEmail());
+        jLabel5.setText(jLabel5.getText() + MongoDBCalls.getIAM().getWebsite());
+        jLabel16.setText(jLabel16.getText() + MongoDBCalls.getIAM().getPhoneNo());
+        jLabel17.setText(jLabel17.getText()+ MongoDBCalls.getIAM().getGSTNo());
+        jLabel18.setText(jLabel18.getText()+ MongoDBCalls.getIAM().getDL1());
+        jLabel21.setText(jLabel21.getText() + MongoDBCalls.getIAM().getDL2());
+        jLabel19.setText(jLabel19.getText() + MongoDBCalls.getIAM().getFoodLicienceNo());
     }
 
     /**
@@ -145,7 +156,7 @@ public class pCustomerLeger extends javax.swing.JFrame {
         jPanel2.setLayout(null);
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel5.setText("WEBSITE:            kalkibiotech.com");
+        jLabel5.setText("WEBSITE:            ");
         jPanel2.add(jLabel5);
         jLabel5.setBounds(10, 90, 370, 17);
 
@@ -165,32 +176,32 @@ public class pCustomerLeger extends javax.swing.JFrame {
         jLabel3.setBounds(10, 50, 346, 20);
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel4.setText("EMAIL:                 Biotechkalki@gmail.com");
+        jLabel4.setText("EMAIL:                 ");
         jPanel2.add(jLabel4);
         jLabel4.setBounds(10, 70, 375, 17);
 
         jLabel16.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel16.setText("Phone No:            9161666611");
+        jLabel16.setText("Phone No:            ");
         jPanel2.add(jLabel16);
         jLabel16.setBounds(10, 110, 250, 17);
 
         jLabel17.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel17.setText("GST No:               09ABAFK0025G1ZT ");
+        jLabel17.setText("GST No:                ");
         jPanel2.add(jLabel17);
         jLabel17.setBounds(10, 130, 270, 17);
 
         jLabel18.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel18.setText("D.L No1:              UP5220B000817                            ");
+        jLabel18.setText("D.L No1:              ");
         jPanel2.add(jLabel18);
         jLabel18.setBounds(10, 150, 350, 17);
 
         jLabel19.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel19.setText("Food Lic No:        22723854000164");
+        jLabel19.setText("Food Lic No:        ");
         jPanel2.add(jLabel19);
         jLabel19.setBounds(10, 190, 240, 17);
 
         jLabel21.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel21.setText("D.L No2:              UP5221B000815");
+        jLabel21.setText("D.L No2:              ");
         jPanel2.add(jLabel21);
         jLabel21.setBounds(10, 170, 260, 17);
 
@@ -438,7 +449,7 @@ public class pCustomerLeger extends javax.swing.JFrame {
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setText("Ledger");
         jPanel6.add(jLabel11);
-        jLabel11.setBounds(20, 10, 830, 29);
+        jLabel11.setBounds(20, 10, 830, 28);
 
         jLabel13.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -477,7 +488,6 @@ public class pCustomerLeger extends javax.swing.JFrame {
         jTable2.setToolTipText("");
         jTable2.setGridColor(new java.awt.Color(0, 0, 0));
         jTable2.setSelectionBackground(new java.awt.Color(255, 255, 255));
-        jTable2.setSelectionForeground(new java.awt.Color(0, 0, 0));
         jTable2.getTableHeader().setReorderingAllowed(false);
         jPanel6.add(jTable2);
         jTable2.setBounds(10, 340, 860, 400);

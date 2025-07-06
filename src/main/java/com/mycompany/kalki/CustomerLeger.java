@@ -79,7 +79,7 @@ public class CustomerLeger extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
 
-        setTitle("Kalki Biotech || Ledger");
+        setTitle("Ledger");
         setBackground(new java.awt.Color(5, 15, 25));
         getContentPane().setLayout(null);
 
@@ -124,6 +124,11 @@ public class CustomerLeger extends javax.swing.JFrame {
         jDateChooser2.setBounds(590, 70, 213, 32);
 
         jComboBox1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jComboBox1);
         jComboBox1.setBounds(240, 120, 210, 38);
 
@@ -208,7 +213,7 @@ public class CustomerLeger extends javax.swing.JFrame {
         jLabel51.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel51.setForeground(new java.awt.Color(255, 255, 255));
         jPanel1.add(jLabel51);
-        jLabel51.setBounds(380, 600, 130, 17);
+        jLabel51.setBounds(390, 590, 130, 30);
 
         jLabel52.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel52.setForeground(new java.awt.Color(255, 255, 255));
@@ -221,7 +226,7 @@ public class CustomerLeger extends javax.swing.JFrame {
 
         jSeparator4.setBackground(new java.awt.Color(0, 0, 0));
         jPanel1.add(jSeparator4);
-        jSeparator4.setBounds(230, 590, 685, 2);
+        jSeparator4.setBounds(230, 590, 685, 3);
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3WyW.gif"))); // NOI18N
         jPanel1.add(jLabel4);
@@ -232,7 +237,7 @@ public class CustomerLeger extends javax.swing.JFrame {
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setText("Ledger");
         jPanel1.add(jLabel11);
-        jLabel11.setBounds(10, 10, 940, 29);
+        jLabel11.setBounds(10, 10, 940, 28);
 
         getContentPane().add(jPanel1);
         jPanel1.setBounds(0, 0, 970, 740);
@@ -289,11 +294,11 @@ ArrayList<Object[]> Filteredbills = new ArrayList<>();
             @Override
             public void run() {
                 try {
-                     TotalTaxable = 0.0;
-     TotalGST = 0.0;
-     GrandTotal = 0.0;
-     Amount_Paid = 0.0;
-     Amount_Left = 0.0;
+                    TotalTaxable = 0.0;
+                    TotalGST = 0.0;
+                    GrandTotal = 0.0;
+                    Amount_Paid = 0.0;
+                    Amount_Left = 0.0;
                     DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
                     model.setRowCount(0);
                     ArrayList<Object[]> bills = new ArrayList<>();
@@ -328,7 +333,7 @@ ArrayList<Object[]> Filteredbills = new ArrayList<>();
                         if ((d.after(start) || d.equals(start)) && (d.before(End) || d.equals(End))) {
                             System.out.println(d);
                             Filteredbills.add(bills.get(i));
-                          bills.get(i)[0]= sdf1.format(bills.get(i)[0]) ;
+                            bills.get(i)[0] = sdf1.format(bills.get(i)[0]);
                             model.addRow(bills.get(i));
                             System.out.println(bills.get(i)[1]);
                             TotalTaxable = TotalTaxable + Double.parseDouble(bills.get(i)[4].toString());
@@ -345,7 +350,7 @@ ArrayList<Object[]> Filteredbills = new ArrayList<>();
                     jLabel48.setText(df.format(GrandTotal));
                     jLabel52.setText(df.format(Amount_Paid));
                     Amount_Left = GrandTotal - Amount_Paid;
-                    jLabel51.setText(Amount_Left.toString());
+                    jLabel51.setText(df.format(Amount_Left));
 
                 } catch (Exception ex) {
                     Logger.getLogger(CustomerLeger.class.getName()).log(Level.SEVERE, null, ex);
@@ -394,6 +399,10 @@ ArrayList<Object[]> Filteredbills = new ArrayList<>();
         t1.start();
 
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments

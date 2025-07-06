@@ -5,6 +5,9 @@
  */
 package com.mycompany.kalki;
 
+import com.mycompany.kalki.Models.Customer;
+import com.mycompany.kalki.Models.BilledMeds;
+import com.mycompany.kalki.DBCalls.MongoDBCalls;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -31,6 +34,28 @@ public class Printbills extends javax.swing.JFrame {
     public Printbills(String Inv, LocalDate Date, Customer BillingDetails, Customer ShippingDetails, ArrayList<BilledMeds> medicins,Double GST, Double Taxable,Double NetTotal,String paid,String Remark,String Amountleft,Boolean TBC, Integer pageNo,String Transport, ArrayList<Double[]> GSTdetails) {
         
         initComponents();
+        System.out.println("com.mycompany.kalki.Printbills.<init>()");
+        jLabel1.setText(MongoDBCalls.getIAM().getCustomrName().toUpperCase());
+        jLabel2.setText(MongoDBCalls.getIAM().getAddress1());
+        jLabel3.setText(MongoDBCalls.getIAM().getAddress2());
+        jLabel4.setText( "Email   :  "+ MongoDBCalls.getIAM().getEmail());
+        jLabel5.setText( "Website :    "+ MongoDBCalls.getIAM().getWebsite());
+        
+        jLabel17.setText("Phone No    :    "+ MongoDBCalls.getIAM().getPhoneNo());
+        jLabel18.setText("GST No      :    "+ MongoDBCalls.getIAM().getGSTNo());
+        jLabel19.setText("Dl No1      :    "+ MongoDBCalls.getIAM().getDL1());
+        jLabel20.setText("Dl No2      :    "+ MongoDBCalls.getIAM().getDL2());
+        jLabel21.setText("Food Lic No :    "+ MongoDBCalls.getIAM().getFoodLicienceNo());
+        
+        jLabel75.setText(MongoDBCalls.getIAM().getCustomrName());
+        jLabel76.setText("A/C no :    "+ MongoDBCalls.getIAM().getAccountNo());
+        jLabel77.setText("IFSC Code :    "+ MongoDBCalls.getIAM().getIFSCCode());
+        jLabel78.setText("UPI Id :    "+ MongoDBCalls.getIAM().getUPIId());
+        
+        
+        jLabel45.setText(MongoDBCalls.getIAM().getCustomrName());
+        
+        
         jLabel48.setText("<html>HSN<br>Code</html>");
         jLabel60.setText("<html>Taxable<br>Amount</html>");
         jLabel55.setText("<html>Net<br>QTY</html>");
@@ -123,14 +148,14 @@ public class Printbills extends javax.swing.JFrame {
                 med.getMRP(),
                 med.getQTY(),//QTY
                 med.getScheme(),//scheme
-                med.NetQTY,//net QTY
+                med.getNetQTY(),//net QTY
                 "<html>"+med.getExpire().split("/")[0]+"<br>"+med.getExpire().split("/")[1]+"</html>",
                 med.getPTS(),//rate/pts
                 med.getPTR(),//PTR
                 med.getDiscount(),
-                med.TaxableAmount,
+                med.getTaxableAmount(),
                "<html>"+med.getGSTPercentage().toString()+"<br>"+med.getGST().toString()+"</html>",
-                med.NetTotal,
+                med.getNetTotal(),
                 };
             model.addRow(row);
             jTable1.setRowHeight(40);
@@ -225,9 +250,6 @@ public class Printbills extends javax.swing.JFrame {
         jLabel43 = new javax.swing.JLabel();
         jLabel44 = new javax.swing.JLabel();
         jLabel47 = new javax.swing.JLabel();
-        jLabel48 = new javax.swing.JLabel();
-        jLabel49 = new javax.swing.JLabel();
-        jLabel51 = new javax.swing.JLabel();
         jLabel55 = new javax.swing.JLabel();
         jLabel56 = new javax.swing.JLabel();
         jLabel57 = new javax.swing.JLabel();
@@ -281,6 +303,9 @@ public class Printbills extends javax.swing.JFrame {
         jLabel52 = new javax.swing.JLabel();
         jLabel53 = new javax.swing.JLabel();
         jLabel54 = new javax.swing.JLabel();
+        jLabel48 = new javax.swing.JLabel();
+        jLabel49 = new javax.swing.JLabel();
+        jLabel51 = new javax.swing.JLabel();
         jLabel46 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -324,9 +349,7 @@ public class Printbills extends javax.swing.JFrame {
             }
         });
         jTable1.setGridColor(new java.awt.Color(0, 0, 0));
-        jTable1.setRowHeight(20);
         jTable1.setSelectionBackground(new java.awt.Color(255, 255, 255));
-        jTable1.setSelectionForeground(new java.awt.Color(0, 0, 0));
         jTable1.getTableHeader().setReorderingAllowed(false);
         jPanel6.add(jTable1);
         jTable1.setBounds(30, 410, 1260, 370);
@@ -359,17 +382,17 @@ public class Printbills extends javax.swing.JFrame {
         jLabel5.setBounds(10, 110, 370, 17);
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 26)); // NOI18N
-        jLabel1.setText("KALKI BIOTECH");
+        jLabel1.setText("DRAVAINS BIOTECH");
         jPanel2.add(jLabel1);
         jLabel1.setBounds(11, 1, 375, 40);
 
         jLabel2.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
-        jLabel2.setText("Badhara Chauraha, Deoria");
+        jLabel2.setText("KH.NO.914, Mehara Purwa Post GI Estate");
         jPanel2.add(jLabel2);
         jLabel2.setBounds(10, 40, 346, 30);
 
         jLabel3.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
-        jLabel3.setText("Uttar Pradesh, 274001");
+        jLabel3.setText("DEORIA, Uttar Pradesh, 274001");
         jPanel2.add(jLabel3);
         jLabel3.setBounds(10, 60, 346, 30);
 
@@ -385,10 +408,10 @@ public class Printbills extends javax.swing.JFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
 
         jLabel17.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel17.setText("Phone No        9161666611");
+        jLabel17.setText("Phone No       +91 6306456069");
 
         jLabel18.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel18.setText("GST No           09ABAFK0025G1ZT ");
+        jLabel18.setText("GST No           09BFSPM7200L1ZX");
 
         jLabel19.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel19.setText("D.L No1          UP5220B000817                            ");
@@ -451,7 +474,7 @@ public class Printbills extends javax.swing.JFrame {
         jLabel74.setText("Bank Details ");
 
         jLabel75.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel75.setText("Kalki Biotech");
+        jLabel75.setText("Dravins Biotech");
 
         jLabel76.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel76.setText("A/C no : 188211010000122");
@@ -627,28 +650,28 @@ public class Printbills extends javax.swing.JFrame {
         jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
 
         jLabel22.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel22.setText("DELIVERY AT");
+        jLabel22.setText("DELIVERY AT:");
 
         jLabel23.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel23.setText("GST NO ");
+        jLabel23.setText("GST NO:");
 
         jLabel24.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel24.setText("PAN");
+        jLabel24.setText("PAN:");
 
         jLabel25.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel25.setText("D.L No1");
+        jLabel25.setText("D.L No1:");
 
         jLabel26.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel26.setText("D.L No2 ");
 
         jLabel27.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel27.setText("Goods Through");
+        jLabel27.setText("Goods Through:");
 
         jLabel29.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel29.setText("State");
+        jLabel29.setText("State: ");
 
         jLabel28.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel28.setText("jLabel28");
+        jLabel28.setText("------------");
 
         jLabel63.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel63.setText("jLabel63");
@@ -678,7 +701,7 @@ public class Printbills extends javax.swing.JFrame {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel27)
-                            .addComponent(jLabel29))
+                            .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(24, 24, 24)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -733,7 +756,7 @@ public class Printbills extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel29)
                     .addComponent(jLabel68))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         jPanel6.add(jPanel5);
@@ -808,7 +831,7 @@ public class Printbills extends javax.swing.JFrame {
 
         jSeparator2.setBackground(new java.awt.Color(0, 0, 0));
         jPanel7.add(jSeparator2);
-        jSeparator2.setBounds(180, 60, 551, 2);
+        jSeparator2.setBounds(180, 60, 551, 3);
 
         jLabel117.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel117.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -830,7 +853,7 @@ public class Printbills extends javax.swing.JFrame {
 
         jLabel45.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel45.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel45.setText("(Kalki Biotech)");
+        jLabel45.setText("(Dravins Biotech)");
         jPanel7.add(jLabel45);
         jLabel45.setBounds(-10, 180, 180, 17);
 
@@ -867,24 +890,6 @@ public class Printbills extends javax.swing.JFrame {
         jLabel47.setText(" S.No");
         jPanel6.add(jLabel47);
         jLabel47.setBounds(30, 370, 40, 30);
-
-        jLabel48.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel48.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel48.setText("HSN ");
-        jPanel6.add(jLabel48);
-        jLabel48.setBounds(80, 370, 70, 40);
-
-        jLabel49.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel49.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel49.setText("Batch");
-        jPanel6.add(jLabel49);
-        jLabel49.setBounds(170, 370, 50, 30);
-
-        jLabel51.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel51.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel51.setText("  Pack");
-        jPanel6.add(jLabel51);
-        jLabel51.setBounds(430, 370, 70, 30);
 
         jLabel55.setBackground(new java.awt.Color(255, 255, 255));
         jLabel55.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -1155,20 +1160,38 @@ public class Printbills extends javax.swing.JFrame {
         jLabel54.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel54.setText("Scheme");
 
+        jLabel48.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel48.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel48.setText("HSN ");
+
+        jLabel49.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel49.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel49.setText("Batch");
+
+        jLabel51.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel51.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel51.setText("  Pack");
+
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
-                .addGap(234, 234, 234)
-                .addComponent(jLabel50, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(163, 163, 163)
-                .addComponent(jLabel52, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addComponent(jLabel48, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jLabel49, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addComponent(jLabel50, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(87, 87, 87)
+                .addComponent(jLabel51, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel52, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel53, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addGap(35, 35, 35)
                 .addComponent(jLabel54, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(562, Short.MAX_VALUE))
+                .addContainerGap(571, Short.MAX_VALUE))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1178,7 +1201,10 @@ public class Printbills extends javax.swing.JFrame {
                     .addComponent(jLabel50, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel52, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel53, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel54, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel54, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel48, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel49, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel51, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 

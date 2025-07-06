@@ -8,8 +8,10 @@ package com.mycompany.kalki;
 import com.mycompany.kalki.DBCalls.GetDBData;
 import com.mycompany.kalki.DBCalls.MongoDBCalls;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -30,25 +32,26 @@ public class AddItem extends javax.swing.JFrame {
         AutoCompleteDecorator.decorate(year);
 //        GetDBData bdata = new GetDBData();
         MongoDBCalls dbCalls = new MongoDBCalls();
-jLabel14.setVisible(false);
+        jLabel14.setVisible(false);
         try {
             MedsName = dbCalls.GetAllMedsName();
 //            AutoCompleteDecorator.decorate(product, MedsName, true);
-            
-            SellerName =dbCalls.getAllSellers();
-            for (int i = 0; i <SellerName.size() ; i++) {
+
+            SellerName = dbCalls.getAllSellers();
+            for (int i = 0; i < SellerName.size(); i++) {
                 jComboBox1.addItem(SellerName.get(i));
             }
-            
-           AutoCompleteDecorator.decorate(jComboBox1);
-            
-        } catch (Exception ex) {
-            Logger.getLogger(AddItem.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
+            AutoCompleteDecorator.decorate(jComboBox1);
+
+        } catch (Exception ex) {
+            Logger.getLogger(AddItem.class.getName()).log(Level.ALL.SEVERE, null, ex);
+        }
+        jDateChooser1.setDate(new Date());
     }
     ArrayList<String> MedsName = new ArrayList<>();
     ArrayList<String> SellerName = new ArrayList<>();
+    private static final DecimalFormat df = new DecimalFormat("0.00");
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -97,6 +100,8 @@ jLabel14.setVisible(false);
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel17 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        Transport = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jTextField3 = new javax.swing.JTextField();
@@ -113,6 +118,7 @@ jLabel14.setVisible(false);
         jLabel15.setText("jLabel15");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("PURCHASE ENTRY");
         addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 formKeyPressed(evt);
@@ -223,6 +229,7 @@ jLabel14.setVisible(false);
         jPanel3.add(jLabel1);
         jLabel1.setBounds(90, 210, 70, 30);
 
+        jLabel13.setDisplayedMnemonic('P');
         jLabel13.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -232,9 +239,15 @@ jLabel14.setVisible(false);
 
         jLabel18.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel18.setText("0.0");
+        jLabel18.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jLabel18KeyReleased(evt);
+            }
+        });
         jPanel3.add(jLabel18);
-        jLabel18.setBounds(610, 440, 190, 30);
+        jLabel18.setBounds(610, 480, 190, 30);
 
         batch.setBackground(new java.awt.Color(5, 15, 25));
         batch.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -294,6 +307,9 @@ jLabel14.setVisible(false);
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 qtyKeyPressed(evt);
             }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                qtyKeyTyped(evt);
+            }
         });
         jPanel3.add(qty);
         qty.setBounds(610, 160, 190, 30);
@@ -301,6 +317,7 @@ jLabel14.setVisible(false);
         Sc1.setBackground(new java.awt.Color(5, 15, 25));
         Sc1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         Sc1.setForeground(new java.awt.Color(255, 255, 255));
+        Sc1.setText("0");
         Sc1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Sc1ActionPerformed(evt);
@@ -331,6 +348,7 @@ jLabel14.setVisible(false);
         sc2.setBackground(new java.awt.Color(5, 15, 25));
         sc2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         sc2.setForeground(new java.awt.Color(255, 255, 255));
+        sc2.setText("0");
         sc2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 sc2KeyPressed(evt);
@@ -349,6 +367,11 @@ jLabel14.setVisible(false);
         jTextField1.setBackground(new java.awt.Color(5, 15, 25));
         jTextField1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jTextField1.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextField1KeyPressed(evt);
@@ -466,7 +489,7 @@ jLabel14.setVisible(false);
             }
         });
         jPanel3.add(jButton1);
-        jButton1.setBounds(90, 490, 680, 50);
+        jButton1.setBounds(100, 530, 710, 50);
 
         jPanel3.add(jComboBox1);
         jComboBox1.setBounds(200, 70, 480, 30);
@@ -483,6 +506,33 @@ jLabel14.setVisible(false);
         jLabel20.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jPanel3.add(jLabel20);
         jLabel20.setBounds(90, 110, 90, 30);
+
+        jLabel23.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel23.setText("Other Costs: ");
+        jPanel3.add(jLabel23);
+        jLabel23.setBounds(500, 440, 170, 30);
+
+        Transport.setBackground(new java.awt.Color(5, 15, 25));
+        Transport.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        Transport.setForeground(new java.awt.Color(255, 255, 255));
+        Transport.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        Transport.setText("0.0");
+        Transport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TransportActionPerformed(evt);
+            }
+        });
+        Transport.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                TransportKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                TransportKeyReleased(evt);
+            }
+        });
+        jPanel3.add(Transport);
+        Transport.setBounds(730, 440, 70, 30);
 
         jLabel22.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel22.setForeground(new java.awt.Color(255, 255, 255));
@@ -516,6 +566,11 @@ jLabel14.setVisible(false);
         jTextField4.setBackground(new java.awt.Color(5, 15, 25));
         jTextField4.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jTextField4.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField4ActionPerformed(evt);
+            }
+        });
         jTextField4.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextField4KeyPressed(evt);
@@ -567,7 +622,7 @@ jLabel14.setVisible(false);
         jLabel26.setForeground(new java.awt.Color(255, 255, 255));
         jLabel26.setText("Total: ");
         jPanel3.add(jLabel26);
-        jLabel26.setBounds(500, 440, 70, 30);
+        jLabel26.setBounds(500, 480, 70, 30);
 
         jRadioButton2.setBackground(new java.awt.Color(5, 15, 25));
         jRadioButton2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -583,12 +638,12 @@ jLabel14.setVisible(false);
 
         jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3WyW.gif"))); // NOI18N
         jPanel3.add(jLabel14);
-        jLabel14.setBounds(170, 20, 660, 570);
+        jLabel14.setBounds(170, 20, 660, 680);
 
         getContentPane().add(jPanel3);
-        jPanel3.setBounds(0, -10, 920, 590);
+        jPanel3.setBounds(0, -10, 920, 710);
 
-        setSize(new java.awt.Dimension(916, 618));
+        setSize(new java.awt.Dimension(916, 701));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -627,15 +682,16 @@ jLabel14.setVisible(false);
         jLabel17.setVisible(b);
         jLabel18.setVisible(b);
         jLabel19.setVisible(b);
-         jLabel12.setVisible(b);
-         jLabel20.setVisible(b);
-         jLabel2.setVisible(b);
-         jLabel28.setVisible(b);
-         jLabel26.setVisible(b);
-         jLabel22.setVisible(b);
-        
-//        jLabel12.setVisible(b);
+        jLabel12.setVisible(b);
+        jLabel20.setVisible(b);
+        jLabel2.setVisible(b);
+        jLabel28.setVisible(b);
+        jLabel26.setVisible(b);
+        jLabel22.setVisible(b);
+        jLabel23.setVisible(b);
+        Transport.setVisible(b);
 
+//        jLabel12.setVisible(b);
         product.setVisible(b);
         HSN.setVisible(b);
         pack.setVisible(b);
@@ -657,15 +713,15 @@ jLabel14.setVisible(false);
         jDateChooser1.setVisible(b);
         jRadioButton1.setVisible(b);
         jRadioButton2.setVisible(b);
-        
+
         jTextField1.setVisible(b);
-jTextField2.setVisible(b);
-jTextField4.setVisible(b);
-jTextField5.setVisible(b);
+        jTextField2.setVisible(b);
+        jTextField4.setVisible(b);
+        jTextField5.setVisible(b);
     }
-    public void add()
-    {
-    Thread t = new Thread(new Runnable() {
+
+    public void add() {
+        Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 setall(false);
@@ -692,23 +748,42 @@ jTextField5.setVisible(b);
                         Double PTR = Double.parseDouble(ptr.getText());
                         Double Rate = Double.parseDouble(rate.getText());
                         Double MRP = Double.parseDouble(mrp.getText());
-                        Double GSTPaid=Double.parseDouble(jTextField1.getText());
-                        Med med = new Med(0l, HSNCode, Product, Pack, Batch, Expire, GST, QTY, Scheme, PTS, PTR, Rate , MRP );
+                        Double GSTPaid = Double.valueOf(jTextField1.getText());
+                        Double otherCost = Double.valueOf(Transport.getText());
+                        Double otherCostPerUnit=otherCost/QTY;
+                        Med med = new Med(0l, HSNCode, Product, Pack, Batch, Expire, GST, QTY, Scheme, PTS, PTR, Rate+otherCostPerUnit, MRP);
 //                        GetDBData dBData = new GetDBData();
                         MongoDBCalls DB = new MongoDBCalls();
-                        String Company=jComboBox1.getSelectedItem().toString();
-                        String AgainstInvoice=jTextField3.getText();
-                        Long BillDate=jDateChooser1.getDate().getTime();
-                        boolean result = DB.insertItem(med,Company,AgainstInvoice,BillDate);
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
-                        boolean presult=DB.insertPurcheseItem(med,jComboBox1.getSelectedItem().toString(),
+                        String Company = jComboBox1.getSelectedItem().toString();
+                        String AgainstInvoice = jTextField3.getText();
+                        Long BillDate = jDateChooser1.getDate().getTime();
+                        boolean result = DB.insertItem(med, Company, AgainstInvoice, BillDate);
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                        boolean presult = DB.insertPurcheseItem(med, jComboBox1.getSelectedItem().toString(),
                                 jTextField3.getText(),
                                 formatter.format(jDateChooser1.getDate()),
                                 jTextField1.getText(),
                                 jTextField4.getText(),
                                 jLabel18.getText());
-                        if (result && presult ) {
+                        if (result && presult) {
                             JOptionPane.showMessageDialog(rootPane, "Inserted Successfully");
+                            HSN.setText("");
+                            product.setText("");
+                            pack.setText("");
+                            batch.setText("");
+                            qty.setText("");
+                            Sc1.setText("");
+                            sc2.setText("");
+                            pts.setText("");
+                            ptr.setText("");
+                            rate.setText("");
+                            mrp.setText("");
+
+                            jTextField1.setText("0");
+                            jTextField2.setText("0");
+                            jTextField4.setText("0");
+                            jTextField5.setText("0");
+                            jLabel18.setText("");
                         } else {
                             JOptionPane.showMessageDialog(rootPane, "Failed");
                         }
@@ -716,33 +791,16 @@ jTextField5.setVisible(b);
                         JOptionPane.showMessageDialog(rootPane, "Please Provide Correct Inputs...");
                     }
                 }
-                HSN.setText("");
-                product.setText("");
-                pack.setText("");
-                batch.setText("");
-                qty.setText("");
-                Sc1.setText("");
-                sc2.setText("");
-                pts.setText("");
-                ptr.setText("");
-                rate.setText("");
-                mrp.setText("");
-                
-                jTextField1.setText("0");
-                jTextField2.setText("0");
-                jTextField4.setText("0");
-                jTextField5.setText("0");
-                jLabel18.setText("");
 
                 setall(true);
                 jLabel14.setVisible(false);
-                
+
             }
 
         });
         t.start();
         t1.start();
-    
+
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         add();
@@ -753,130 +811,129 @@ jTextField5.setVisible(b);
     }//GEN-LAST:event_Sc1ActionPerformed
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
-        System.out.println(jTextField1.getText());
-        double gst=Double.parseDouble(jTextField1.getText());
-        Double gstamount=gst*Double.parseDouble(rate.getText())*Double.parseDouble(qty.getText())/100;
-        jTextField2.setText(gstamount.toString());
-        Double total=Double.parseDouble(rate.getText())*Double.parseDouble(qty.getText())+gstamount;
-        jLabel18.setText(total.toString());
+        
+        double gst = Double.parseDouble(jTextField1.getText());
+        Double gstamount = gst * Double.parseDouble(rate.getText()) * Double.parseDouble(qty.getText()) / 100;
+        jTextField2.setText(df.format(gstamount));
+        calculateTotalValue();
     }//GEN-LAST:event_jTextField1KeyReleased
 
     private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
         System.out.println(jTextField2.getText());
-        double gstamount=Double.parseDouble(jTextField2.getText());
-        Double gst=gstamount*100/(Double.parseDouble(rate.getText())*Double.parseDouble(qty.getText()));
-        jTextField1.setText(gst.toString());
-        Double total=Double.parseDouble(rate.getText())*Double.parseDouble(qty.getText())+gstamount;
-        jLabel18.setText(total.toString());
+        double gstamount = Double.parseDouble(jTextField2.getText());
+        Double gst = gstamount * 100 / (Double.parseDouble(rate.getText()) * Double.parseDouble(qty.getText()));
+        calculateTotalValue();
     }//GEN-LAST:event_jTextField2KeyReleased
 
     private void jButton1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyPressed
-         if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }
     }//GEN-LAST:event_jButton1KeyPressed
 
     private void mrpKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mrpKeyPressed
-       if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }
     }//GEN-LAST:event_mrpKeyPressed
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
-       if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }
     }//GEN-LAST:event_formKeyPressed
 
     private void productKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productKeyPressed
         product.setText(product.getText().toUpperCase());
-        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }
     }//GEN-LAST:event_productKeyPressed
 
     private void HSNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_HSNKeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }       // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }       // TODO add your handling code here:
     }//GEN-LAST:event_HSNKeyPressed
 
     private void packKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_packKeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }      // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }      // TODO add your handling code here:
     }//GEN-LAST:event_packKeyPressed
 
     private void batchKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_batchKeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }        // TODO add your handling code here:
     }//GEN-LAST:event_batchKeyPressed
 
     private void monthKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_monthKeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }        // TODO add your handling code here:
     }//GEN-LAST:event_monthKeyPressed
 
     private void yearKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_yearKeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }       // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }       // TODO add your handling code here:
     }//GEN-LAST:event_yearKeyPressed
 
     private void gstKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_gstKeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }     // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }     // TODO add your handling code here:
     }//GEN-LAST:event_gstKeyPressed
 
     private void qtyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_qtyKeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }      // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }   
+        calculateTotalValue();// TODO add your handling code here:
     }//GEN-LAST:event_qtyKeyPressed
 
     private void Sc1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_Sc1KeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }       // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }       // TODO add your handling code here:
     }//GEN-LAST:event_Sc1KeyPressed
 
     private void sc2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sc2KeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }       // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }       // TODO add your handling code here:
     }//GEN-LAST:event_sc2KeyPressed
 
     private void ptrKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ptrKeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }        // TODO add your handling code here:
     }//GEN-LAST:event_ptrKeyPressed
 
     private void ptsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ptsKeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }        // TODO add your handling code here:
     }//GEN-LAST:event_ptsKeyPressed
 
     private void rateKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rateKeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }  
+        calculateTotalValue();// TODO add your handling code here:
     }//GEN-LAST:event_rateKeyPressed
 
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }        // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1KeyPressed
 
     private void jTextField2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyPressed
- if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-           add();           
-       }      // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            add();
+        }      // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2KeyPressed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -892,10 +949,8 @@ jTextField5.setVisible(b);
         System.out.println(jTextField4.getText());
         double gst=Double.parseDouble(jTextField4.getText());
         Double Igstamount=gst*Double.parseDouble(rate.getText())*Double.parseDouble(qty.getText())/100;
-        jTextField5.setText(Igstamount.toString());
-        
-         Double total=Double.parseDouble(rate.getText())*Double.parseDouble(qty.getText())+Igstamount;
-        jLabel18.setText(total.toString());
+        jTextField5.setText(df.format(Igstamount));
+        calculateTotalValue();
     }//GEN-LAST:event_jTextField4KeyReleased
 
     private void jTextField5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField5KeyPressed
@@ -907,9 +962,8 @@ jTextField5.setVisible(b);
         double gstamount=Double.parseDouble(jTextField5.getText());
         Double gst=gstamount*100/(Double.parseDouble(rate.getText())*Double.parseDouble(qty.getText()));
         jTextField4.setText(gst.toString());
-        
-        Double total=Double.parseDouble(rate.getText())*Double.parseDouble(qty.getText())+gstamount;
-        jLabel18.setText(total.toString());
+        calculateTotalValue();
+
     }//GEN-LAST:event_jTextField5KeyReleased
 
     private void jTextField4KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField4KeyTyped
@@ -919,33 +973,75 @@ jTextField5.setVisible(b);
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         jRadioButton2.setSelected(false);
         jRadioButton1.setSelected(true);
-         jTextField1.setText("0");
-      jTextField2.setText("0");
-      jTextField1.setEditable(false);
-      jTextField2.setEditable(false);
-      jTextField4.setEditable(true);
-      jTextField5.setEditable(true);
+        jTextField1.setText("0");
+        jTextField2.setText("0");
+        jTextField1.setEditable(false);
+        jTextField2.setEditable(false);
+        jTextField4.setEditable(true);
+        jTextField5.setEditable(true);
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
-      jRadioButton1.setSelected(false);
-      jRadioButton2.setSelected(true);
-      jTextField4.setText("0");
-      jTextField5.setText("0");
-      jTextField4.setEditable(false);
-      jTextField5.setEditable(false);
-      jTextField1.setEditable(true);
-      jTextField2.setEditable(true);
+        jRadioButton1.setSelected(false);
+        jRadioButton2.setSelected(true);
+        jTextField4.setText("0");
+        jTextField5.setText("0");
+        jTextField4.setEditable(false);
+        jTextField5.setEditable(false);
+        jTextField1.setEditable(true);
+        jTextField2.setEditable(true);
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     private void productKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productKeyTyped
-       product.setText(product.getText().toUpperCase());
+        product.setText(product.getText().toUpperCase());
     }//GEN-LAST:event_productKeyTyped
 
     private void productKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_productKeyReleased
-      product.setText(product.getText().toUpperCase());
+        product.setText(product.getText().toUpperCase());
     }//GEN-LAST:event_productKeyReleased
 
+    private void TransportKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TransportKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TransportKeyPressed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void TransportKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TransportKeyReleased
+       calculateTotalValue();
+    }//GEN-LAST:event_TransportKeyReleased
+
+    private void jLabel18KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jLabel18KeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel18KeyReleased
+
+    private void TransportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TransportActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TransportActionPerformed
+
+    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField4ActionPerformed
+
+    private void qtyKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_qtyKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_qtyKeyTyped
+
+    private void calculateTotalValue(){
+       
+        Double GstCost = Double.valueOf(jTextField2.getText());
+        Double Igstamount = Double.valueOf(jTextField5.getText());
+        Double otherCost= Double.valueOf(Transport.getText());
+        System.out.println(Double.parseDouble(rate.getText())* Double.parseDouble(qty.getText()));
+        System.out.println(gst + " "+otherCost +" "+ Igstamount);
+        Double total = (Double.parseDouble(rate.getText()) * Double.parseDouble(qty.getText())) + GstCost + otherCost + Igstamount;
+        jLabel18.setText(df.format(total));
+        Double sellingPrice=Double.valueOf(pts.getText());
+        Double margin= (sellingPrice/total)*100;
+        System.out.println(margin);
+
+    }
     /**
      * @param args the command line arguments
      */
@@ -984,6 +1080,7 @@ jTextField5.setVisible(b);
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField HSN;
     private javax.swing.JTextField Sc1;
+    private javax.swing.JTextField Transport;
     private javax.swing.JTextField batch;
     private javax.swing.JComboBox<String> gst;
     private javax.swing.JButton jButton1;
@@ -1004,6 +1101,7 @@ jTextField5.setVisible(b);
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel3;

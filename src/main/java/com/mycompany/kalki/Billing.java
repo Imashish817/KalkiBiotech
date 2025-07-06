@@ -5,6 +5,8 @@
  */
 package com.mycompany.kalki;
 
+import com.mycompany.kalki.Models.Customer;
+import com.mycompany.kalki.Models.BilledMeds;
 import com.mycompany.kalki.DBCalls.GetDBData;
 import com.mycompany.kalki.DBCalls.MongoDBCalls;
 import java.awt.Dimension;
@@ -28,9 +30,6 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import javax.swing.JFrame;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -68,7 +67,7 @@ public class Billing extends javax.swing.JFrame {
             }
 //            Integer invoiceno = DB.getinvoiceno();
 //            long inv = new Date(2023,4,21).getTime();
-
+            String inv = Utility.getfinancialyear() + Utility.Sep + Utility.getInvoiceNo();
             jLabel22.setText(inv);
             jLabel57.setText(date.toString());
         } catch (Exception ex) {
@@ -82,7 +81,7 @@ public class Billing extends javax.swing.JFrame {
 
     ArrayList<Customer> customers = new ArrayList<>();
     LocalDate date = LocalDate.now();
-    String inv = Utility.getfinancialyear() + "/KB/" + Utility.getInvoiceNo();
+    String inv = Utility.getfinancialyear() + Utility.Sep + Utility.getInvoiceNo();
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
     /**
@@ -316,7 +315,7 @@ public class Billing extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addGap(0, 127, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addComponent(jLabel54, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -412,7 +411,7 @@ public class Billing extends javax.swing.JFrame {
         jLabel64.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3WyW.gif"))); // NOI18N
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Kalki Biotech || Billing");
+        setTitle("Billing");
         setBackground(new java.awt.Color(30, 41, 59));
         setLocation(new java.awt.Point(0, 0));
         getContentPane().setLayout(null);
@@ -466,7 +465,7 @@ public class Billing extends javax.swing.JFrame {
         jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel22.setText("jLabel22");
         getContentPane().add(jLabel22);
-        jLabel22.setBounds(1210, 100, 140, 15);
+        jLabel22.setBounds(1210, 100, 140, 14);
 
         jLabel23.setForeground(new java.awt.Color(255, 255, 255));
         jLabel23.setText("Total GST");
@@ -497,7 +496,7 @@ public class Billing extends javax.swing.JFrame {
         jLabel57.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel57.setText("jLabel57");
         getContentPane().add(jLabel57);
-        jLabel57.setBounds(1210, 40, 150, 15);
+        jLabel57.setBounds(1210, 40, 150, 14);
 
         jScrollPane1.setBackground(new java.awt.Color(29, 31, 33));
         jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -732,7 +731,6 @@ public class Billing extends javax.swing.JFrame {
         jButton1.setText("ADD");
         jButton1.setBorder(null);
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.setOpaque(false);
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 jButton1MouseEntered(evt);
@@ -757,7 +755,7 @@ public class Billing extends javax.swing.JFrame {
         jPanel1.setBounds(30, 10, 440, 300);
 
         jPanel2.setBackground(new java.awt.Color(71, 85, 105));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Billed To Address", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Billed To Address", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel2.setOpaque(false);
 
         jComboBox2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -993,7 +991,7 @@ public class Billing extends javax.swing.JFrame {
         jPanel2.setBounds(480, 10, 380, 300);
 
         jPanel3.setBackground(new java.awt.Color(71, 85, 105));
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Ship To Address", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Ship To Address", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel3.setOpaque(false);
         jPanel3.setLayout(null);
 
@@ -1012,7 +1010,7 @@ public class Billing extends javax.swing.JFrame {
             }
         });
         jPanel3.add(jCheckBox1);
-        jCheckBox1.setBounds(20, 20, 310, 23);
+        jCheckBox1.setBounds(20, 20, 310, 19);
 
         jLabel58.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel58.setForeground(new java.awt.Color(255, 255, 255));
@@ -1215,10 +1213,10 @@ public class Billing extends javax.swing.JFrame {
         GrandProfit = 0.0;
         for (int i = 0; i < billedMeds.size(); i++) {
             model.setValueAt(i + 1, i, 0);
-            GrandTotal = GrandTotal + Double.parseDouble(model.getValueAt(i, 15).toString());
-            GrandGST = GrandGST + Double.parseDouble(model.getValueAt(i, 14).toString().split("<br>")[1].split("</html>")[0]);
-            GrandTaxable = GrandTaxable + Double.parseDouble(model.getValueAt(i, 13).toString());
-            GrandProfit = GrandProfit + Double.parseDouble(model.getValueAt(i, 16).toString());
+            GrandTotal = GrandTotal + Double.valueOf(model.getValueAt(i, 15).toString());
+            GrandGST = GrandGST + Double.valueOf(model.getValueAt(i, 14).toString().split("<br>")[1].split("</html>")[0]);
+            GrandTaxable = GrandTaxable + Double.valueOf(model.getValueAt(i, 13).toString());
+            GrandProfit = GrandProfit + Double.valueOf(model.getValueAt(i, 16).toString());
         }
         jLabel7.setText(df.format(GrandTotal));
         jLabel24.setText(df.format(GrandGST));
@@ -1271,9 +1269,9 @@ public class Billing extends javax.swing.JFrame {
             }
             jDialog2.setVisible(true);
             jTextField2.setEditable(false);
-            jTextField2.setText(GrandTotal.toString());
+            jTextField2.setText(df.format(GrandTotal));
             jLabel64.setVisible(false);
-            jLabel55.setText(GrandTotal.toString());
+            jLabel55.setText(df.format(GrandTotal));
 
         }
 
@@ -1393,7 +1391,7 @@ public class Billing extends javax.swing.JFrame {
                     String gstin = jLabel43.getText();
                     String Destination = jTextField18.getText();
                     boolean b = dBCalls.AddBill(inv, jLabel38.getText(), customer_id, Destination, shippingC_id, gstin, GrandTaxable, GrandGST, GrandTotal, GrandProfit, milliseconds, AmountPaid, Remark, jTextField19.getText());
-                    dBCalls.updateInvoiceCounter(Integer.parseInt(inv.split("/KB/")[1]));
+                    dBCalls.updateInvoiceCounter(Integer.valueOf(inv.split(Utility.Sep)[1]));
                     try {
                         if (billedMeds.isEmpty()) {
                         } else {
@@ -1434,31 +1432,31 @@ public class Billing extends javax.swing.JFrame {
                             TotalAgainstGST18 = TotalAgainstGST18 + billedMeds.get(i).getTaxableAmount();
                             GST18 = GST18 + billedMeds.get(i).getGST();
                         }
-                         if (billedMeds.get(i).getGSTPercentage() == 0 && !jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
-                           TotalAgainstGST0 = TotalAgainstGST0 + billedMeds.get(i).getTaxableAmount();
+                        if (billedMeds.get(i).getGSTPercentage() == 0 && !jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
+                            TotalAgainstGST0 = TotalAgainstGST0 + billedMeds.get(i).getTaxableAmount();
                             IGST0 = IGST0 + billedMeds.get(i).getGST();
                         }
-                         if (billedMeds.get(i).getGSTPercentage() == 5 && !jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
-                           TotalAgainstGST5 = TotalAgainstGST5 + billedMeds.get(i).getTaxableAmount();
+                        if (billedMeds.get(i).getGSTPercentage() == 5 && !jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
+                            TotalAgainstGST5 = TotalAgainstGST5 + billedMeds.get(i).getTaxableAmount();
                             IGST5 = IGST5 + billedMeds.get(i).getGST();
                         }
-                         if (billedMeds.get(i).getGSTPercentage() == 12 && !jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
-                           TotalAgainstGST12 = TotalAgainstGST12 + billedMeds.get(i).getTaxableAmount();
+                        if (billedMeds.get(i).getGSTPercentage() == 12 && !jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
+                            TotalAgainstGST12 = TotalAgainstGST12 + billedMeds.get(i).getTaxableAmount();
                             IGST12 = IGST12 + billedMeds.get(i).getGST();
                         }
-                         if (billedMeds.get(i).getGSTPercentage() == 18 && !jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
-                           TotalAgainstGST18 = TotalAgainstGST18 + billedMeds.get(i).getTaxableAmount();
+                        if (billedMeds.get(i).getGSTPercentage() == 18 && !jLabel47.getText().equalsIgnoreCase("09-Uttar Pradesh")) {
+                            TotalAgainstGST18 = TotalAgainstGST18 + billedMeds.get(i).getTaxableAmount();
                             IGST18 = IGST18 + billedMeds.get(i).getGST();
                         }
                     }
-                    ArrayList<Double[]> GSTdetails=new ArrayList<>();
-                    Double vals0[]={TotalAgainstGST0,GST0/2,GST0/2,IGST0,GST0+IGST0};
+                    ArrayList<Double[]> GSTdetails = new ArrayList<>();
+                    Double vals0[] = {TotalAgainstGST0, GST0 / 2, GST0 / 2, IGST0, GST0 + IGST0};
                     GSTdetails.add(vals0);
-                    Double vals5[]={TotalAgainstGST5,GST5/2,GST5/2,IGST5,GST5+IGST5};
+                    Double vals5[] = {TotalAgainstGST5, GST5 / 2, GST5 / 2, IGST5, GST5 + IGST5};
                     GSTdetails.add(vals5);
-                    Double vals12[]={TotalAgainstGST12,GST12/2,GST12/2,IGST12,GST12+IGST12};
+                    Double vals12[] = {TotalAgainstGST12, GST12 / 2, GST12 / 2, IGST12, GST12 + IGST12};
                     GSTdetails.add(vals12);
-                    Double vals18[]={TotalAgainstGST18,GST18/2,GST18/2,IGST18,GST18+IGST18};
+                    Double vals18[] = {TotalAgainstGST18, GST18 / 2, GST18 / 2, IGST18, GST18 + IGST18};
                     GSTdetails.add(vals18);
                     PrintingJob job = new PrintingJob();
 
@@ -1494,7 +1492,7 @@ public class Billing extends javax.swing.JFrame {
 
         Double amountpaid = Double.parseDouble(jTextField3.getText());
         Double amountLeft = GrandTotal - amountpaid;
-        jLabel55.setText(amountLeft.toString());
+        jLabel55.setText(df.format(amountLeft));
     }//GEN-LAST:event_jTextField3KeyReleased
     private void fillshipingDetails() {
         if (jCheckBox1.isSelected()) {
@@ -1658,16 +1656,16 @@ public class Billing extends javax.swing.JFrame {
                 billedMed.getMRP(),
                 billedMed.getQTY(),//QTY
                 billedMed.getScheme(),//scheme
-                billedMed.NetQTY,//net QTY
+                billedMed.getNetQTY(),//net QTY
                 billedMed.getExpire(),
                 billedMed.getPTS(),//rate/pts
                 billedMed.getPTR(),//PTR
                 billedMed.getDiscount(),
-                billedMed.TaxableAmount,
-                "<html>" + billedMed.GSTPercentage.toString() + "<br>" + billedMed.GST.toString() + "</html>",
+                billedMed.getTaxableAmount(),
+                "<html>" + billedMed.getGSTPercentage().toString() + "<br>" + billedMed.getGST().toString() + "</html>",
                 //                billedMed.GSTPercentage.toString()+ "\n"+billedMed.GST.toString(),
-                billedMed.NetTotal,
-                billedMed.Profit
+                billedMed.getNetTotal(),
+                billedMed.getProfit()
             };
             model.addRow(row);
             jTable1.setRowHeight(40);

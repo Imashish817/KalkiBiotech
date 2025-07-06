@@ -5,7 +5,7 @@
  */
 package com.mycompany.kalki.DBCalls;
 
-import com.mycompany.kalki.BilledMeds;
+import com.mycompany.kalki.Models.BilledMeds;
 
 import java.util.ArrayList;
 import com.mongodb.bulk.BulkWriteResult;
@@ -22,42 +22,90 @@ import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.InsertOneModel;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
-import com.mycompany.kalki.Customer;
+import com.mycompany.kalki.Models.Customer;
 import com.mycompany.kalki.GSTR1Model;
+import com.mycompany.kalki.IAM;
 import com.mycompany.kalki.Med;
-import java.text.DecimalFormat;
+
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import java.util.Arrays;
 import java.util.Date;
+import org.bson.types.ObjectId;
 
 public class MongoDBCalls {
 
-    private final MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
-    private final MongoDatabase db = client.getDatabase("Billing");
+    private String db_name = "";
+    private static final MongoClient client = MongoClients.create("mongodb+srv://ashish:J4Rk7hpeEpfF6jdn@newcluster.9pycrns.mongodb.net/?retryWrites=true&w=majority");
+    private static MongoDatabase db;
+    private static final MongoDatabase Zyrodb = client.getDatabase("Zyro_Admin");
+    private static String CustomrName = "";
+    private static String Address1 = "";
+    private static String Address2 = "";
+    private static String Email = "";
+    private static String AccountNo = "";
+    private static String DL1 = "";
+    private static String DL2 = "";
+    private static String FoodLicienceNo = "";
+    private static String GSTNo = "";
+    private static String IFSCCode = "";
+    private static String PhoneNo = "";
+    private static String UPIId = "";
+
+    public static IAM iam = new IAM();
 
     public boolean Login(String Password) {
 
-        MongoCollection col = db.getCollection("User");
-
-        // Create a filter to query documents where QTY > 0
+        MongoCollection col = Zyrodb.getCollection("Users");
         Bson filter = Filters.eq("Pass", Password);
 
         // Execute the find query with the filter
         FindIterable<Document> cursor = col.find(filter);
         String Pass = "";
+        String db_name = "";
         for (Document doc : cursor) {
 
             Pass = doc.getString("Pass");
+            db_name = doc.getString("DB");
+            iam.setCustomrName(doc.getString("Name"));
+            iam.setAddress1(doc.getString("Address1"));
+            iam.setAddress2(doc.getString("Address2"));
+            iam.setEmail(doc.getString("Email"));
+            iam.setAccountNo(doc.getString("AccountNo"));
+            iam.setDL1(doc.getString("DL1"));
+            iam.setDL2(doc.getString("DL2"));
+            iam.setFoodLicienceNo(doc.getString("FoodLicienceNo"));
+            iam.setGSTNo(doc.getString("GSTNo"));
+            iam.setIFSCCode(doc.getString("IFSCCode"));
+            iam.setPhoneNo(doc.getString("PhoneNo"));
+            iam.setUPIId(doc.getString("UPIId"));
+            iam.setWebsite(doc.getString("Website"));
+            iam.setEntitlements(doc.getList("Entitlement", String.class));
+            System.out.println(doc.getList("Entitlement", String.class)); 
+        }
+        
 
+        if (!"".equals(db_name)) {
+            db = client.getDatabase(db_name);
         }
         boolean b = false;
         if (Pass.equals(Password)) {
             b = true;
         }
-
         return b;
+    }
+
+    public static IAM getIAM() {
+        return iam;
+    }
+
+    public static String getInvoiceDialog() {
+        String[] names = iam.getCustomrName().split(" ");
+        System.out.print(CustomrName + " ---- " + names[0].charAt(0) + names[1].charAt(0));
+        return names[0].charAt(0) + "" + names[1].charAt(0);
     }
 
     public int[] insertBilledMeds(ArrayList<BilledMeds> billedMeds, String invoiceno, Long date) throws Exception {
@@ -92,7 +140,7 @@ public class MongoDBCalls {
         return new int[]{result.getInsertedCount()};
     }
 
-     public int[] insertRBilledMeds(ArrayList<BilledMeds> billedMeds, String invoiceno, Long date) throws Exception {
+    public int[] insertRBilledMeds(ArrayList<BilledMeds> billedMeds, String invoiceno, Long date) throws Exception {
         MongoCollection col = db.getCollection("Sold_Medicines");
         List<InsertOneModel<Document>> bulkWrites = new ArrayList<>(); // Use InsertOneModel for inserts
         for (int i = 0; i < billedMeds.size(); i++) {
@@ -113,7 +161,7 @@ public class MongoDBCalls {
                     .append("TaxableAmount", -medicine.getTaxableAmount())
                     .append("GSTpercentage", medicine.getGSTPercentage())
                     .append("GST", -medicine.getNewGSTAmount())
-                    .append("NetTotal", -(medicine.getNewGSTAmount()+medicine.getTaxableAmount()))
+                    .append("NetTotal", -(medicine.getNewGSTAmount() + medicine.getTaxableAmount()))
                     .append("Date", date)
                     .append("Profit", -medicine.getProfitDecline());
 
@@ -124,11 +172,39 @@ public class MongoDBCalls {
         return new int[]{result.getInsertedCount()};
     }
     
-    public boolean insertItem(Med med,String Company,String AgainstInvoice,Long BillDate) {
+        public Long getMedicineCounter() {
+        MongoCollection col = db.getCollection("counters");
+        Bson filter = Filters.exists("Customer");
+        MongoCursor<Document> cursor = col.find(filter).iterator();
+        Long medicineid = 0l;
+        while (cursor.hasNext()) {
+
+            Document document = cursor.next();
+            medicineid = document.getLong("Customer");
+        }
+        return medicineid;
+    }
+
+    public void updateMedicineCounter(Long inv) {
+        MongoCollection col = db.getCollection("counters");
+        Bson filter = Filters.eq("Medicine", inv);
+        Bson update = Updates.inc("Medicine", +1);
+        UpdateResult result = col.updateOne(filter, update);
+
+        if (result.getModifiedCount() > 0) {
+            System.out.println("updateMedicineCounter: Update successful");
+        } else {
+            System.out.println("updateMedicineCounter: No documents were updated");
+        }
+    }
+    
+    public boolean insertItem(Med med, String Company, String AgainstInvoice, Long BillDate) {
+        Long id= getMedicineCounter();
         try {
             MongoCollection col = db.getCollection("Medicins");
             // Create a document to insert
             Document doc = new Document("HSNCode", med.getHSNCode())
+                    .append("MedicineId", id)
                     .append("Product", med.getProduct())
                     .append("Pack", med.getPack())
                     .append("Batch", med.getBatch())
@@ -142,11 +218,11 @@ public class MongoDBCalls {
                     .append("MRP", med.getMRP())
                     .append("Company", Company)
                     .append("AgainstInvoice", AgainstInvoice)
-                    .append("BillDate", BillDate)
-            ;
+                    .append("BillDate", BillDate);
 
             // Insert the document into the collection
             col.insertOne(doc);
+            updateMedicineCounter(id);
             return true;
         } catch (Exception ex) {
             System.out.println(ex);
@@ -184,11 +260,40 @@ public class MongoDBCalls {
 
         return meds;
     }
+    
+    public Long getCustomerCounter() {
+        MongoCollection col = db.getCollection("counters");
+        Bson filter = Filters.exists("Customer");
+        MongoCursor<Document> cursor = col.find(filter).iterator();
+        Long Customerid = 0l;
+        while (cursor.hasNext()) {
 
+            Document document = cursor.next();
+            Customerid = document.getLong("Customer");
+        }
+        System.out.println("Customerid.getClass()=>"+Customerid.getClass());
+        return Customerid;
+    }
+
+    public void updateCustomerCounter(Long inv) {
+        MongoCollection col = db.getCollection("counters");
+        Bson filter = Filters.eq("Customer", inv);
+        Bson update = Updates.inc("Customer", +1);
+        UpdateResult result = col.updateOne(filter, update);
+
+        if (result.getModifiedCount() > 0) {
+            System.out.println("updateCustomerCounter: Update successful");
+        } else {
+            System.out.println("updateCustomerCounter: No documents were updated");
+        }
+    }
     public boolean AddCustomer(Customer customer) {
         try {
             MongoCollection col = db.getCollection("Customer");
-            Document customerDocument = new Document("Firm_Name", customer.getFirm_Name())
+            Long cid=getCustomerCounter();
+            Document customerDocument = new Document(
+                    "Firm_Name", customer.getFirm_Name())
+                    .append("CustomerId", cid)
                     .append("Address", customer.getAddress())
                     .append("Mobile", customer.getMobile())
                     .append("tel", customer.getTel())
@@ -199,9 +304,11 @@ public class MongoDBCalls {
                     .append("DL2", customer.getDL2())
                     .append("State", customer.getState());
 
-            col.insertOne(customerDocument);
+            InsertOneResult result =col.insertOne(customerDocument);
+            updateCustomerCounter(cid);
             return true;
         } catch (Exception e) {
+            System.out.println("com.mycompany.kalki.DBCalls.MongoDBCalls.AddCustomer()"+e);
             return false;
         }
 
@@ -263,7 +370,6 @@ public class MongoDBCalls {
         Customer c = null;
         // Iterate through the result cursor and map the document fields to Med object
         for (Document doc : cursor) {
-
             String firmName = doc.getString("Firm_Name");
             String address = doc.getString("Address");
             String mobile = doc.getString("Mobile");
@@ -311,7 +417,23 @@ public class MongoDBCalls {
         }
 
     }
-    public boolean AddRBill(String invoiceno, String CustomerName, Long CustomerID, String Destination, Long ShipingID, String GSTIN, Double TotalTaxable, Double GST, Double NetTotal, Double NetProfit, Long date, Double AmountPaid, String Remark, String Transport,String Original_Invoice) {
+    
+    public boolean UpdateCashPayment(String inv, double paymentAmount){
+     MongoCollection col = db.getCollection("Bills");
+        Bson filter = Filters.eq("InvoiceNo", inv);
+        Bson update = Updates.inc("AmountPaid", +paymentAmount); // Decrement QTY by the specified value
+        UpdateResult result = col.updateOne(filter, update);
+
+        if (result.getModifiedCount() > 0) {
+            System.out.println("Update successful");
+            return true;
+        } else {
+            System.out.println("No documents were updated");
+        }
+        return false;
+    }
+    
+    public boolean AddRBill(String invoiceno, String CustomerName, Long CustomerID, String Destination, Long ShipingID, String GSTIN, Double TotalTaxable, Double GST, Double NetTotal, Double NetProfit, Long date, Double AmountPaid, String Remark, String Transport, String Original_Invoice) {
 
         try {
             MongoCollection col = db.getCollection("Bills");
@@ -355,15 +477,30 @@ public class MongoDBCalls {
             System.out.println("No documents were updated");
         }
     }
-public void updateitemlistforReturnBill(int QTY, String Batch, String Product , String Expire, String Scheme) throws Exception {
+    public void updateitemlist(String Product,int QTY, String Batch, String Expire,Double MRP ) throws Exception {
         MongoCollection col = db.getCollection("Medicins");
-       
+        Bson filter = Filters.and(
+                Filters.eq("Product", Product),
+                Filters.eq("Batch", Batch),
+                Filters.eq("Expire", Expire),
+                Filters.eq("MRP", MRP));
+        Bson update = Updates.inc("QTY", -QTY); // Decrement QTY by the specified value
+        UpdateResult result = col.updateOne(filter, update);
+
+        if (result.getModifiedCount() > 0) {
+            System.out.println("Update successful");
+        } else {
+            System.out.println("No documents were updated");
+        }
+    }
+
+    public void updateitemlistforReturnBill(int QTY, String Batch, String Product, String Expire, String Scheme) throws Exception {
+        MongoCollection col = db.getCollection("Medicins");
+ 
         Bson filter = Filters.and(
                 Filters.eq("Product", Product),
                 Filters.eq("Batch", Batch),
                 Filters.eq("Expire", Expire)
-                
-                
         );
         Bson update = Updates.inc("QTY", +QTY); // Decrement QTY by the specified value
         UpdateResult result = col.updateOne(filter, update);
@@ -374,6 +511,7 @@ public void updateitemlistforReturnBill(int QTY, String Batch, String Product , 
             System.out.println("No documents were updated");
         }
     }
+
     public ArrayList<String> GetAllMedsName() throws Exception {
         MongoCollection col = db.getCollection("Medicins");
         ArrayList<String> MedsName = new ArrayList<>();
@@ -418,7 +556,7 @@ public void updateitemlistforReturnBill(int QTY, String Batch, String Product , 
                 String InvoiceNo = document.getString("InvoiceNo");
                 String CustomerName = document.getString("CustomerName");
                 Long CustomerDetails = document.getLong("CustomerDetails");
-                Double TaxableAmount =  Math.round(document.getDouble("TaxableAmount") * 100) / 100.0;
+                Double TaxableAmount = Math.round(document.getDouble("TaxableAmount") * 100) / 100.0;
                 Double GST = Math.round(document.getDouble("GST") * 100) / 100.0;
                 Double NetTotal = Math.round(document.getDouble("NetTotal") * 100) / 100.0;
                 Double NetProfit = Math.round(document.getDouble("NetProfit") * 100) / 100.0;
@@ -434,13 +572,33 @@ public void updateitemlistforReturnBill(int QTY, String Batch, String Product , 
         return Bills;
 
     }
+    
+    public Boolean CashEntry(String Inv, Double Amount){
+    try {
+            MongoCollection col = db.getCollection("CashEntry");
+            // Create a new document to be inserted
+            Document document = new Document();
+            document.append("InvoiceNo", Inv)
+                    
+                    .append("Date", new Date().getTime() )
+                    .append("PaymentAmount", Amount);
 
+            // Insert the document into the collection
+            col.insertOne(document);
+
+            return true;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            return false;
+        }
+    }
+    
     public ArrayList<Double> GetSalesDetails(long start, long End) throws Exception {
         ArrayList<Double> SalesDetails = new ArrayList<>();
         MongoCollection col = db.getCollection("Bills");
         // Construct filter for Date range
         Bson filter = Filters.and(
-                 Filters.gte("Date", start),
+                Filters.gte("Date", start),
                 Filters.lte("Date", End)
         );
 
@@ -486,7 +644,7 @@ public void updateitemlistforReturnBill(int QTY, String Batch, String Product , 
                 Long Date = document.getLong("Date");
                 String Transport = document.getString("Transport");
                 String Destination = document.getString("Destination");
-                String GSTIN=document.getString("GSTIN");
+                String GSTIN = document.getString("GSTIN");
                 Customers.add(customer);
                 Customers.add(BillingCustomerID);
                 Customers.add(ShippingCustomerID);
@@ -504,7 +662,29 @@ public void updateitemlistforReturnBill(int QTY, String Batch, String Product , 
         }
         return Customers;
     }
-
+    
+    public ArrayList<Object> getbillDetail(String InvoiceNo) {
+        MongoCollection col = db.getCollection("Bills");
+        Bson filter = Filters.eq("InvoiceNo", InvoiceNo);
+        ArrayList<Object> BillDetail = new ArrayList<>();
+        try (MongoCursor<Document> cursor = col.find(filter).iterator()) {
+            while (cursor.hasNext()) {
+                Document document = cursor.next();
+                String customer = document.getString("CustomerName");
+                Double NetTotal = document.getDouble("NetTotal");
+                Double AmountPaid = document.getDouble("AmountPaid");
+                String Remark = document.getString("remark");
+                Long Date = document.getLong("Date");
+                BillDetail.add(customer);
+                BillDetail.add(NetTotal);
+                BillDetail.add(AmountPaid);
+                BillDetail.add(Remark);
+                BillDetail.add(Date);
+            }
+        }
+        return BillDetail;
+    }
+    
     public ArrayList<BilledMeds> getBilledMeds(String InvoiceNo) {
         MongoCollection col = db.getCollection("Sold_Medicines");
         Bson filter = Filters.eq("Invoice", InvoiceNo);
@@ -533,7 +713,7 @@ public void updateitemlistforReturnBill(int QTY, String Batch, String Product , 
                 Double GSTpercentage = document.getDouble("GSTpercentage");
                 Double GST = document.getDouble("GST");
                 Double NetTotal = document.getDouble("NetTotal");
-                Double Profit=document.getDouble("Profit");
+                Double Profit = document.getDouble("Profit");
                 BilledMeds med = new BilledMeds(0l, HSN, Batch, product, Pack, MRP, QTY, Scheme, NetQTY, Expire, PTS, PTR, Discount, TaxableAmount, GSTpercentage, GST, NetTotal, Profit);
                 Meds.add(med);
             }
@@ -664,7 +844,7 @@ public void updateitemlistforReturnBill(int QTY, String Batch, String Product , 
             if (TaxableAmount > 0) {
                 TransactionType = "Sales";
             }
-            GSTR1Model one = new GSTR1Model(InvoiceNo, date, "", "", "", TransactionType, HSN, NetQTY, TaxableAmount, GSTpercentage, GST, NetTotal,"");
+            GSTR1Model one = new GSTR1Model(InvoiceNo, date, "", "", "", TransactionType, HSN, NetQTY, TaxableAmount, GSTpercentage, GST, NetTotal, "");
             soldmed.add(one);
         }
         cursor.close();
@@ -688,13 +868,12 @@ public void updateitemlistforReturnBill(int QTY, String Batch, String Product , 
             String CustomerName = document.getString("CustomerName");
             String Destination = document.getString("Destination");
             String GSTIN = document.getString("GSTIN");
-            String Nature= "B2B";
-            if(GSTIN ==null || GSTIN.length()==0)
-            {
-            Nature= "B2C";
+            String Nature = "B2B";
+            if (GSTIN == null || GSTIN.length() == 0) {
+                Nature = "B2C";
             }
 
-            GSTR1Model one = new GSTR1Model(InvoiceNo, 0l, CustomerName, GSTIN, Nature, "", "", 0, 0.0, 0.0, 0.0, 0.0,Destination);
+            GSTR1Model one = new GSTR1Model(InvoiceNo, 0l, CustomerName, GSTIN, Nature, "", "", 0, 0.0, 0.0, 0.0, 0.0, Destination);
             soldmed.add(one);
         }
         cursor.close();
@@ -702,4 +881,29 @@ public void updateitemlistforReturnBill(int QTY, String Batch, String Product , 
         return soldmed;
     }
 
+    public boolean deleteFromBillTable(String Invoice) {
+        // Delete document by _id
+        MongoCollection col = db.getCollection("Bills");
+        Document filter = new Document("InvoiceNo", Invoice);
+        DeleteResult result = col.deleteOne(filter);
+        if (result.getDeletedCount() > 0) {
+            return true;
+        }
+        return false;
+
+    }
+
+    public boolean deleteFromSoldMedicineTable(String Invoice) {
+        // Delete document by _id
+        MongoCollection col = db.getCollection("Sold_Medicines");
+        Document filter = new Document("Invoice", Invoice);
+        DeleteResult result = col.deleteMany(filter);
+
+        if (result.getDeletedCount() > 0) {
+            System.err.println("deleteFromSoldMedicineTable ==>result.getDeletedCount()==>"+result.getDeletedCount());
+            return true;
+        }
+        return false;
+
+    }
 }

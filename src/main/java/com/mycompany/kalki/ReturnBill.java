@@ -5,6 +5,8 @@
  */
 package com.mycompany.kalki;
 
+import com.mycompany.kalki.Models.Customer;
+import com.mycompany.kalki.Models.BilledMeds;
 import com.mycompany.kalki.DBCalls.MongoDBCalls;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -527,7 +529,10 @@ public class ReturnBill extends javax.swing.JFrame {
         SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
         InvoiceNo = jTextField1.getText();
         Bill = DBCalls.getbillDetails(InvoiceNo);
-
+        if(Bill.isEmpty()){
+             JOptionPane.showMessageDialog(rootPane, "Does not Found you Bill : "+InvoiceNo);
+        }
+        else{
         jLabel34.setText(Bill.get(0).toString());
         jLabel39.setText(format1.format(Bill.get(8)));
         jLabel38.setText(Bill.get(6).toString());
@@ -546,7 +551,7 @@ public class ReturnBill extends javax.swing.JFrame {
             jComboBox1.addItem(Meds.get(i).getProduct());
         }
         AutoCompleteDecorator.decorate(jComboBox1, ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
-        jComboBox1.setSelectedIndex(0);
+        jComboBox1.setSelectedIndex(0);}
     }//GEN-LAST:event_jButton1ActionPerformed
     int medindex;
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -592,7 +597,7 @@ public class ReturnBill extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.getRowCount();
 //        med.setNetTotal(NewGSTAmount+med.getTaxableAmount());
-        Double Profitper = med.getProfit() / med.NetQTY;
+        Double Profitper = med.getProfit() / med.getNetQTY();
         Double profitDecline = Profitper * Integer.parseInt(jTextField2.getText());
         Double ReturnRate = med.getTaxableAmount() / med.getNetQTY();
         Double NewGSTAmount = med.getGSTPercentage() * Integer.parseInt(jTextField2.getText()) * ReturnRate / 100;
@@ -633,6 +638,7 @@ public class ReturnBill extends javax.swing.JFrame {
     Double Taxable = 0.0;
     Double GSTAmount = 0.0;
     Double profitDecline = 0.0;
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             for (int i = 0; i < returnMeds.size(); i++) {
@@ -643,7 +649,7 @@ public class ReturnBill extends javax.swing.JFrame {
             }
 //            update it
             Long Date$time = new Date().getTime();
-            String inv = Utility.getfinancialyear() + "/KB/R/" + Utility.getInvoiceNo();
+            String inv = Utility.getfinancialyear() + Utility.RSep + Utility.getInvoiceNo();
             String returnedmoney[] = {jTextField4.getText()};
 
             if(Utility.isNumeric(returnedmoney))
@@ -651,7 +657,7 @@ public class ReturnBill extends javax.swing.JFrame {
                 //                                    cname                        cid             dest                     shipingid       GSTIN        taxable
                 boolean b = dBCalls.AddRBill(inv, Bill.get(0).toString(), (Long) Bill.get(1), Bill.get(10).toString(), (Long) Bill.get(2), Bill.get(11).toString(), -Taxable, -GSTAmount,
                         -(Taxable + GSTAmount), -profitDecline, Date$time, -Double.parseDouble(jTextField4.getText()), jTextField3.getText(), "", InvoiceNo);
-                dBCalls.updateInvoiceCounter(Integer.parseInt(inv.split("/KB/R/")[1]));
+                dBCalls.updateInvoiceCounter(Integer.parseInt(inv.split(Utility.RSep)[1]));
                 System.out.println(b);
                 DBCalls.insertRBilledMeds(returnMeds, inv, Date$time);
                 //Add  items to inventry

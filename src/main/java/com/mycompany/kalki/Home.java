@@ -6,10 +6,10 @@
 package com.mycompany.kalki;
 
 import com.mycompany.kalki.DBCalls.MongoDBCalls;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -25,6 +25,8 @@ public class Home extends javax.swing.JFrame {
         setResizable(false);
         this.setSize(1111, 720);
         jLabel3.setVisible(false);
+        jLabel1.setText(MongoDBCalls.getIAM().getCustomrName());
+       
     }
 
     /**
@@ -45,10 +47,12 @@ public class Home extends javax.swing.JFrame {
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jButton9 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Kalki Biotech || Welcome");
+        setTitle(" Welcome");
         getContentPane().setLayout(null);
 
         jPanel1.setBackground(new java.awt.Color(5, 15, 25));
@@ -115,7 +119,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton3);
-        jButton3.setBounds(690, 150, 180, 100);
+        jButton3.setBounds(700, 450, 180, 100);
 
         jButton4.setBackground(new java.awt.Color(255, 152, 63));
         jButton4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -199,7 +203,7 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jPanel1.add(jButton7);
-        jButton7.setBounds(220, 450, 190, 100);
+        jButton7.setBounds(470, 450, 190, 100);
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -207,6 +211,48 @@ public class Home extends javax.swing.JFrame {
         jLabel1.setText("KalKi Biotech");
         jPanel1.add(jLabel1);
         jLabel1.setBounds(0, 30, 1090, 50);
+
+        jButton9.setBackground(new java.awt.Color(255, 152, 63));
+        jButton9.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jButton9.setForeground(new java.awt.Color(255, 255, 255));
+        jButton9.setText("Cash Entry");
+        jButton9.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton9MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton9MouseExited(evt);
+            }
+        });
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton9);
+        jButton9.setBounds(690, 150, 180, 100);
+
+        jButton8.setBackground(new java.awt.Color(255, 152, 63));
+        jButton8.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jButton8.setForeground(new java.awt.Color(255, 255, 255));
+        jButton8.setText("Master Billing");
+        jButton8.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton8MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton8MouseExited(evt);
+            }
+        });
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton8);
+        jButton8.setBounds(220, 450, 190, 100);
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/3WyW.gif"))); // NOI18N
         jPanel1.add(jLabel3);
@@ -219,30 +265,21 @@ public class Home extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-       Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                setall(false);
-                jLabel3.setVisible(true);
+       Thread t = new Thread(() -> {
+           setall(false);
+           jLabel3.setVisible(true);
+       });
+        Thread t1 = new Thread(() -> {
+            try {
+                DuplicateBill duplicateBill = new DuplicateBill();
+                duplicateBill.setVisible(true);
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        });
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DuplicateBill duplicateBill = new DuplicateBill();
-                    duplicateBill.setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                setall(true);
-                jLabel3.setVisible(false);
-
-            }
-
-        });
+            
+            setall(true);
+            jLabel3.setVisible(false);
+       });
         t.start();
         t1.start();
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -316,119 +353,83 @@ public class Home extends javax.swing.JFrame {
         jButton7.setVisible(b);
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                setall(false);
-                jLabel3.setVisible(true);
-            }
-
+        Thread t = new Thread(() -> {
+            setall(false);
+            jLabel3.setVisible(true);
         });
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Billing billingModule = new Billing();
-                    billingModule.setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                setall(true);
-                jLabel3.setVisible(false);
-
+        Thread t1 = new Thread(() -> {
+            try {
+                Billing billingModule = new Billing();
+                billingModule.setVisible(true);
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+            setall(true);
+            jLabel3.setVisible(false);
         });
         t.start();
         t1.start();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                setall(false);
-                jLabel3.setVisible(true);
-            }
-
+        Thread t = new Thread(() -> {
+            setall(false);
+            jLabel3.setVisible(true);
         });
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    CustomerLeger leger = new CustomerLeger();
-                    leger.setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                setall(true);
-                jLabel3.setVisible(false);
-
+        Thread t1 = new Thread(() -> {
+            try {
+                CustomerLeger leger = new CustomerLeger();
+                leger.setVisible(true);
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+            setall(true);
+            jLabel3.setVisible(false);
         });
         t.start();
         t1.start();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                setall(false);
-                jLabel3.setVisible(true);
-            }
-
+        Thread t = new Thread(() -> {
+            setall(false);
+            jLabel3.setVisible(true);
         });
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    SalesRecord record = new SalesRecord();
-
-                    record.setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                setall(true);
-                jLabel3.setVisible(false);
-
+        Thread t1 = new Thread(() -> {
+            try {
+                SalesRecord record = new SalesRecord();
+                
+                record.setVisible(true);
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+            setall(true);
+            jLabel3.setVisible(false);
         });
         t.start();
         t1.start();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-      Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                setall(false);
-                jLabel3.setVisible(true);
+      Thread t = new Thread(() -> {
+          setall(false);
+          jLabel3.setVisible(true);
+      });
+        Thread t1 = new Thread(() -> {
+            try {
+                AddItem addItem=new AddItem();
+                
+                addItem.setVisible(true);
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        });
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                   AddItem addItem=new AddItem();
-
-                    addItem.setVisible(true);
-                } catch (Exception ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                setall(true);
-                jLabel3.setVisible(false);
-
-            }
-
-        });
+            
+            setall(true);
+            jLabel3.setVisible(false);
+      });
         t.start();
         t1.start();
     }//GEN-LAST:event_jButton4ActionPerformed
@@ -452,6 +453,38 @@ public class Home extends javax.swing.JFrame {
        jButton7.setBackground(new java.awt.Color(255, 152, 63));
         jButton7.setFont(new java.awt.Font("Arial", 1, 16));
     }//GEN-LAST:event_jButton7MouseExited
+
+    private void jButton8MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton8MouseEntered
+
+    private void jButton8MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton8MouseExited
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+       BillEdit billEdit= new BillEdit();
+       billEdit.setVisible(true);
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton9MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton9MouseEntered
+
+    private void jButton9MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton9MouseExited
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        BillPaymentEntry billPaymentEntry;
+        try {
+            billPaymentEntry = new BillPaymentEntry();
+            billPaymentEntry.setVisible(true);
+        } catch (Exception ex) {
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_jButton9ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -482,10 +515,8 @@ public class Home extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Home().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Home().setVisible(true);
         });
     }
 
@@ -497,6 +528,8 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
